@@ -3268,6 +3268,17 @@ class SmExaminationController extends Controller
                 $exam_detail = SmExam::find($exam_id);
                 $exam_id = $exam_id;
                 $class_id = $class_id;
+                $caScores = SmMarkStore::where([
+        ['class_id', $class_id],
+        ['section_id', $section_id],
+        ['student_id', $student_id],
+        ['exam_term_id', $exam_id],
+    ])
+    ->where('school_id', Auth::user()->school_id)
+    ->whereNotNull('ca_scores')
+    ->pluck('ca_scores')
+    ->toArray();
+
 
             return [
     'optional_subject' => $optional_subject,
@@ -3294,6 +3305,7 @@ class SmExaminationController extends Controller
     'total_class_days' => $total_class_days,
     'student_attendance' => $student_attendance,
     'optional_subject_setup' => $optional_subject_setup,
+    'caScores'=>$caScores
             ];
 
             

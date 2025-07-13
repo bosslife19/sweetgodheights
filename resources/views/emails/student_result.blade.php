@@ -945,7 +945,7 @@
                                                             <table class="table @if(resultPrintStatus('vertical_boarder')) mt-5 @endif">
                                                                 <tbody class="spacing">
                                                                 <tr>
-                                                                    <td>@lang('reports.attendance')</td>
+                                                                    {{-- <td>@lang('reports.attendance')</td>
                                                                     @if(isset($exam_content))
                                                                         <td class="nowrap">
                                                                             <p>{{@$student_attendance}} @lang('reports.of') {{@$total_class_days}}</p>
@@ -954,9 +954,9 @@
                                                                         <td class="nowrap">
                                                                             <p>@lang('reports.no_data_found')</p>
                                                                         </td>
-                                                                    @endif
+                                                                    @endif --}}
                                                                     <td>@lang('exam.total_mark')</td>
-                                                                    <td>{{@$total_mark}}</td>
+                                                                    <td>{{$total_mark}}</td>
                                                                 </tr>
                                                                 @if ($average_passing_mark)
                                                                     <tr>
@@ -990,17 +990,17 @@
                                                                     </td>
     
                                                                     @if (@$generalsettingsResultType != 'mark')
-                                                                        <td class="nowrap">@lang('reports.gpa_above') ( {{@$optional_subject_setup->gpa_above}} )</td>
+                                                                        {{-- <td class="nowrap">@lang('reports.gpa_above') ( {{@$optional_subject_setup->gpa_above}} )</td>
                                                                         <td>
                                                                             <p>
                                                                                 {{$optional_countable_gpa}}
                                                                             </p>
-                                                                        </td>
+                                                                        </td> --}}
                                                                     @endif
                                                                 </tr>
                                                                 @if(@$generalsettingsResultType != 'mark')
                                                                     <tr>
-                                                                        <td class="nowrap">@lang('reports.without_optional')</td>
+                                                                        {{-- <td class="nowrap">@lang('reports.without_optional')</td>
                                                                         <td>
                                                                             @php
                                                                                 $without_optional = 0;
@@ -1010,7 +1010,7 @@
     
                                                                             @endphp
                                                                             {{number_format($without_optional, 2,'.','')}}
-                                                                        </td>
+                                                                        </td> --}}
                                                                         <td>@lang('exam.gpa')</td>
                                                                         <td>
                                                                             @php
@@ -1059,13 +1059,13 @@
                                                                             <p>{{@$grade_details->description}}</p>
                                                                         </td>
                                                                     </tr>
-                                                                    <tr>
+                                                                    {{-- <tr>
                                                                         <td colspan="2" style="text-align: center !important;">
                                                                             @lang('exam.position')
                                                                         </td>
                                                                         <td colspan="2" style="text-align: center !important;">{{getStudentMeritPosition($class_id, $section_id, $exam_type_id, $student_detail->id)}}</td>
     
-                                                                    </tr>
+                                                                    </tr> --}}
                                                                 @endif
     
                                                                 </tbody>

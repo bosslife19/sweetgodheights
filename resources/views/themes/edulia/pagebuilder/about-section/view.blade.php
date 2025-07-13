@@ -8,7 +8,7 @@
                         @if (!empty(pagesetting('about_area_img_1')))
                             <div class="about_us_img_item">
                                 <div class="about_us_img_item_img large-img">
-                                    <img src="http://localhost/schoolmanagement/public/images/school-building.jpg"
+                                    <img src="https://sweetgodheights.com/public/images/school-building.jpg"
                                         alt="{{ __('edulia.Image') }}">
                                 </div>
                             </div>

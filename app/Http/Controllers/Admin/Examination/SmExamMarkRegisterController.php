@@ -607,6 +607,34 @@ $ca_scores['cummulative'] = $totalCA;
                         $marks_register->ca_scores = $ca_scores; // Laravel will cast to JSON automatically
                        
                         $marks_register->save();
+
+                        $aggregate = SmMarkStore::where('subject_id', $request->subject_id)
+    ->where('academic_id', getAcademicId())
+    ->where('school_id', Auth::user()->school_id)
+    ->where('student_id', $sid)
+    ->whereNotNull('ca_scores')
+    ->pluck('ca_scores')
+    
+    ->toArray();
+$totalCA = 0;
+
+
+
+
+
+
+
+foreach ($aggregate as $item) {
+    $totalCA += ($item['Ist CA'] ?? 0) + ($item['2nd CA'] ?? 0) + ($item['3rd CA'] ?? 0) + ($item['Exam'] ?? 0);
+}
+
+
+
+$ca_scores['cummulative'] = $totalCA;
+ $marks_register->ca_scores = $ca_scores; // Laravel will cast to JSON automatically
+                       
+                        $marks_register->save();
+                        
                        
                        
                         $subject_full_mark = subjectFullMark($request->exam_id, $request->subject_id, $class_id, $section_id);
