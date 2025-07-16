@@ -71,8 +71,7 @@ SweetGodHeightsSchools comes packed with powerful modules and tools, including:
 
 ```bash
 git clone https://github.com/bosslife19/sweetgodheights.git
-<img width="1366" height="768" alt="sweetgodherosection" src="https://github.com/user-attachments/assets/9ee4b61a-5db4-4d83-a5fd-72cf4a78c7d6" />
-<img width="1366" height="768" alt="sweetgodheightsdashboard" src="https://github.com/user-attachments/assets/34c93446-4ac0-40a1-841f-463cf58a2024" />
+
 cd sweetgodheightsschools
 cp .env.example .env
 composer install
