@@ -71,12 +71,13 @@ SweetGodHeightsSchools comes packed with powerful modules and tools, including:
 
 ```bash
 git clone https://github.com/bosslife19/sweetgodheights.git
+<img width="1366" height="768" alt="sweetgodherosection" src="https://github.com/user-attachments/assets/9ee4b61a-5db4-4d83-a5fd-72cf4a78c7d6" />
+<img width="1366" height="768" alt="sweetgodheightsdashboard" src="https://github.com/user-attachments/assets/34c93446-4ac0-40a1-841f-463cf58a2024" />
 cd sweetgodheightsschools
 cp .env.example .env
 composer install
 php artisan key:generate
-<img width="1366" height="768" alt="sweetgodherosection" src="https://github.com/user-attachments/assets/d9310438-90c7-4701-ab56-1f4ac3ed9abb" />
-<img width="1366" height="768" alt="sweetgodheightsdashboard" src="https://github.com/user-attachments/assets/e9bbc9de-cae8-495e-80b9-0f5e92a55736" />
+
 
 php artisan migrate --seed
 npm install && npm run dev
