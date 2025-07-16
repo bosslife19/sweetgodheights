@@ -58,6 +58,7 @@ use App\Http\Controllers\Admin\StudentInfo\SmStudentReportController;
 use App\Http\Requests\Admin\Examination\SmExamAttendanceSearchRequest;
 use App\Mail\MarkSheetMail;
 use App\Models\StudentResultReport;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Modules\University\Repositories\Interfaces\UnCommonRepositoryInterface;
@@ -3368,7 +3369,7 @@ class SmExaminationController extends Controller
 
         try {
           
-            //  Mail::to($studentRecord->student->email)->send(new MarkSheetMail($pdf, $studentRecord));
+            
              Mail::to("wokodavid001@gmail.com")->send(new MarkSheetMail($pdf, $studentRecord));
         } catch (\Exception $e) {
             // You can log or continue

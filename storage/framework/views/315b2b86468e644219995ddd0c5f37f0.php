@@ -961,18 +961,9 @@
                                                             <table class="table <?php if(resultPrintStatus('vertical_boarder')): ?> mt-5 <?php endif; ?>">
                                                                 <tbody class="spacing">
                                                                 <tr>
-                                                                    <td><?php echo app('translator')->get('reports.attendance'); ?></td>
-                                                                    <?php if(isset($exam_content)): ?>
-                                                                        <td class="nowrap">
-                                                                            <p><?php echo e(@$student_attendance); ?> <?php echo app('translator')->get('reports.of'); ?> <?php echo e(@$total_class_days); ?></p>
-                                                                        </td>
-                                                                    <?php else: ?>
-                                                                        <td class="nowrap">
-                                                                            <p><?php echo app('translator')->get('reports.no_data_found'); ?></p>
-                                                                        </td>
-                                                                    <?php endif; ?>
+                                                                    
                                                                     <td><?php echo app('translator')->get('exam.total_mark'); ?></td>
-                                                                    <td><?php echo e(@$total_mark); ?></td>
+                                                                    <td><?php echo e($total_mark); ?></td>
                                                                 </tr>
                                                                 <?php if($average_passing_mark): ?>
                                                                     <tr>
@@ -1007,29 +998,12 @@
                                                                     </td>
     
                                                                     <?php if(@$generalsettingsResultType != 'mark'): ?>
-                                                                        <td class="nowrap"><?php echo app('translator')->get('reports.gpa_above'); ?> ( <?php echo e(@$optional_subject_setup->gpa_above); ?> )</td>
-                                                                        <td>
-                                                                            <p>
-                                                                                <?php echo e($optional_countable_gpa); ?>
-
-                                                                            </p>
-                                                                        </td>
+                                                                        
                                                                     <?php endif; ?>
                                                                 </tr>
                                                                 <?php if(@$generalsettingsResultType != 'mark'): ?>
                                                                     <tr>
-                                                                        <td class="nowrap"><?php echo app('translator')->get('reports.without_optional'); ?></td>
-                                                                        <td>
-                                                                            <?php
-                                                                                $without_optional = 0;
-                                                                                if($Optional_subject_count){
-                                                                                $without_optional=$main_subject_total_gpa/$Optional_subject_count;
-                                                                                }
-    
-                                                                            ?>
-                                                                            <?php echo e(number_format($without_optional, 2,'.','')); ?>
-
-                                                                        </td>
+                                                                        
                                                                         <td><?php echo app('translator')->get('exam.gpa'); ?></td>
                                                                         <td>
                                                                             <?php
@@ -1079,13 +1053,7 @@
                                                                             <p><?php echo e(@$grade_details->description); ?></p>
                                                                         </td>
                                                                     </tr>
-                                                                    <tr>
-                                                                        <td colspan="2" style="text-align: center !important;">
-                                                                            <?php echo app('translator')->get('exam.position'); ?>
-                                                                        </td>
-                                                                        <td colspan="2" style="text-align: center !important;"><?php echo e(getStudentMeritPosition($class_id, $section_id, $exam_type_id, $student_detail->id)); ?></td>
-    
-                                                                    </tr>
+                                                                    
                                                                 <?php endif; ?>
     
                                                                 </tbody>
