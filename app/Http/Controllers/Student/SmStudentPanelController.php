@@ -2269,6 +2269,35 @@ class SmStudentPanelController extends Controller
                         ->count();
                 }
                 // Attendance Part End
+                       $scores = SmResultStore::where([
+    ['class_id', $class_id],
+    ['section_id', $section_id],
+    ['exam_type_id', $exam_id]
+])
+->where('school_id', Auth::user()->school_id)
+->get();
+
+
+// Step 1: Sort descending by total_marks
+$scores = $scores->sortByDesc('total_marks')->values();
+function ordinal($number) {
+    if (!in_array(($number % 100), [11, 12, 13])) {
+        switch ($number % 10) {
+            case 1:  return $number . 'st';
+            case 2:  return $number . 'nd';
+            case 3:  return $number . 'rd';
+        }
+    }
+    return $number . 'th';
+}
+
+// Step 2: Assign position
+$positionedScores = $scores->map(function ($item, $index) {
+    $rank = $index + 1;
+    $item->setAttribute('position', ordinal($rank)); // this works better with Eloquent models
+    return $item;
+});
+
 
                 $failgpa = SmMarksGrade::where('active_status', 1)
                     ->where('academic_id', getAcademicId())
@@ -2426,6 +2455,7 @@ class SmStudentPanelController extends Controller
     'exam_type_id' => $exam_type_id,
     'section_id' => $section_id,
     'exam_content' => $exam_content,
+    'positionedScores'=>$positionedScores,
     'total_class_days' => $total_class_days,
     'student_attendance' => $student_attendance,
     'optional_subject_setup' => $optional_subject_setup,

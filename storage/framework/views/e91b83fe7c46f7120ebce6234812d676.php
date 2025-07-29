@@ -904,7 +904,12 @@
                                                         </div>
     
     
-    
+                                                        <?php
+                                                            $containsCA = isset($caScores[0]['CA']);
+                                                     
+                                               
+                                                        ?>
+                                                        
                                                         <div class="table-responsive">
                                                         <table class="custom_table">
                                                            
@@ -914,13 +919,26 @@
                                                                     <th colspan="5"><?php echo e($exam_details->title); ?></th>
                                                                 </tr>-->
                                                             <tr>
+                                                                
                                                                 <th><?php echo app('translator')->get('reports.subject_name'); ?></th>
-                                                                <th>1st C.A</th>
+                                                                <?php if($containsCA): ?>
+                                                                <th>CA</th>
+                                                                <th>EXAM</th>
+                                                                                                                                <?php if($exam_details->title =='THIRD TERM EXAMINATION'): ?>
+                                                             <th>Cummulative</th> 
+                                                                <?php endif; ?>
+                                                                    
+                                                                <?php else: ?>
+                                                                    <th>1st C.A</th>
                                                                 <th>2ND C.A</th>
                                                                 <th>3RD C.A</th>
                                                                 <th>EXAM</th>
-                                                                <?php if($exam_details->title =='Third Term'): ?>
-                                                             <th>Cummulative</th>
+                                                               
+                                                             <?php if($exam_details->title =='THIRD TERM EXAMINATION'): ?>
+                                                             <th>Cummulative</th> 
+                                                                <?php endif; ?>
+
+                                                               
                                                             <?php endif; ?>
                                                                 
                                                                 <th>TOTAL</th>
@@ -936,6 +954,21 @@
                                                             </tr>
                                                             </thead>
                                                             <tbody>
+
+                                                                <?php
+                                                                   $targetStudentId = $student_detail->id;
+
+$studentScore = $positionedScores->firstWhere('student_id', $targetStudentId);
+
+if ($studentScore) {
+    $position = $studentScore->position;
+    // You can now use $position as needed
+    
+} else {
+    $position = 'Not found'; // or handle appropriately
+}
+
+                                                                ?>
     
                                                             <?php
                                                                 $optional_countable_gpa = 0;
@@ -971,27 +1004,37 @@
                                                                     <?php
     $ca = collect($caScores)->firstWhere('subject_id', $data->subject_id);
     
+     $normalizedCa = collect($ca)->keyBy(fn($value, $key) => strtolower($key));
+    
 ?>
-<td><?php echo e($ca['Ist CA'] ?? '-'); ?></td>
-<td><?php echo e($ca['2nd CA'] ?? '-'); ?></td>
-<td><?php echo e($ca['3rd CA'] ?? '-'); ?></td>
-<td><?php echo e($ca['Exam'] ?? '-'); ?></td>
 
-<?php if($exam_details->title =='Third Term'): ?>
+
+
+
+
+
+
+<?php if(!isset($ca['CA'])): ?>
+
+<td><?php echo e($normalizedCa['ist ca'] ?? '-'); ?></td>
+<td><?php echo e($normalizedCa['2nd ca'] ?? '-'); ?></td>
+<td><?php echo e($normalizedCa['3rd ca'] ?? '-'); ?></td>
+<td><?php echo e($normalizedCa['exam'] ?? '-'); ?></td>
+
+
+<?php else: ?>
+<td><?php echo e($normalizedCa['ca']?? '-'); ?></td> 
+<td><?php echo e($normalizedCa['exam']?? '-'); ?></td> 
+
+<?php endif; ?>
+
+
+
+<?php if($exam_details->title =='THIRD TERM EXAMINATION'): ?>
     <td><?php echo e($ca['cummulative'] ?? '-'); ?></td>
 <?php endif; ?>
 
-                                                                    <td>
-                                                                        <p>
-                                                                            <?php if(@$generalsettingsResultType == 'mark'): ?>
-                                                                                <?php echo e(subjectPercentageMark(@subjectHighestMark($exam_type_id, $data->subject->id, $class_id, $section_id), @subjectFullMark($exam_details->id, $data->subject->id, $class_id, $section_id))); ?>
-
-                                                                            <?php else: ?>
-                                                                                <?php echo e(@subjectHighestMark($exam_type_id, $data->subject->id, $class_id, $section_id)); ?>
-
-                                                                            <?php endif; ?>
-                                                                        </p>
-                                                                    </td>
+                                                                    
                                                                     <td>
     
                                                                         <p>
@@ -1158,6 +1201,10 @@
                                                             <div class="table-responsive">
                                                             <table class="table <?php if(resultPrintStatus('vertical_boarder')): ?> mt-5 <?php endif; ?>">
                                                                 <tbody class="spacing">
+                                                                    <tr>
+                                                                 <td>Position</td>
+                                                                    <td><?php echo e($position); ?></td>
+                                                                    </tr>
                                                                 <tr>
                                                                     
                                                                     <td><?php echo app('translator')->get('exam.total_mark'); ?></td>

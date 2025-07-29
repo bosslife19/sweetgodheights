@@ -3010,6 +3010,40 @@ class SmExaminationController extends Controller
     ->pluck('ca_scores')
     ->toArray();
 
+       $scores = SmResultStore::where([
+    ['class_id', $class_id],
+    ['section_id', $section_id],
+    ['exam_type_id', $request->exam]
+])
+->where('school_id', Auth::user()->school_id)
+->get();
+
+
+// Step 1: Sort descending by total_marks
+$scores = $scores->sortByDesc('total_marks')->values();
+function ordinal($number) {
+    if (!in_array(($number % 100), [11, 12, 13])) {
+        switch ($number % 10) {
+            case 1:  return $number . 'st';
+            case 2:  return $number . 'nd';
+            case 3:  return $number . 'rd';
+        }
+    }
+    return $number . 'th';
+}
+
+// Step 2: Assign position
+$positionedScores = $scores->map(function ($item, $index) {
+    $rank = $index + 1;
+    $item->setAttribute('position', ordinal($rank)); // this works better with Eloquent models
+    return $item;
+});
+
+
+
+// Helper function (define this in global helpers or within the controller)
+
+
 
                    
            
@@ -3079,6 +3113,7 @@ class SmExaminationController extends Controller
                 $exam_id = $request->exam;
                 $class_id = $request->class;
 
+
                
             //   dd($caScores);
                
@@ -3087,6 +3122,7 @@ class SmExaminationController extends Controller
                     'classes',
                     'studentDetails',
                     'exams',
+                    'positionedScores',
                     'classes',
                     'marks_register',
                     'subjects',
@@ -3279,6 +3315,8 @@ class SmExaminationController extends Controller
     ->whereNotNull('ca_scores')
     ->pluck('ca_scores')
     ->toArray();
+
+
 
 
             return [
