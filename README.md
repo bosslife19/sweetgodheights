@@ -1,23 +1,83 @@
-## About Infix Edu - The Ultimate Education Management System For School, Institute & Academy 
+# SweetGodHeightsSchools
 
-Managing various administrative tasks in one place is now quite easy and time savior with this INFIX and Give your valued time to your institute that will increase next generation productivity for our society.
+**SweetGodHeightsSchools** is a robust and comprehensive school management software designed to streamline administrative tasks, enhance communication, and improve overall operational efficiency for educational institutions. It is built with flexibility and scalability in mind, making it suitable for schools of all sizes.
 
-VIDEO OVERVIEW 
-INFIX has all in one place. You’ll find everything what you are looking into education management system software.
+---
+
+## ✨ Features
+
+SweetGodHeightsSchools comes packed with powerful modules and tools, including:
+
+### 🧑‍🏫 Academic Management
+- Class and subject creation
+- Timetable scheduling
+- Attendance tracking for students and staff
+- Gradebook and report card generation
+
+### 🧑‍🎓 Student Management
+- Enrollment & admissions
+- Profile & records management
+- Guardian information tracking
+- Student promotion and graduation
+
+### 📚 Curriculum & Exams
+- Continuous assessment and exams
+- Custom grading systems
+- Term result publishing
+- Transcripts & certificates
+
+### 💸 Fees & Accounting
+- Fee structure configuration
+- Payment tracking & invoices
+- Online/offline payment support
+- Financial reports
+
+### 📣 Communication
+- Announcements & notices
+- SMS, email, and in-app messaging
+- Parent-teacher communication tools
+
+### 👨‍👩‍👧 Parent & Student Portals
+- Real-time academic performance monitoring
+- Homework and assignment access
+- Fee payment and receipts
+- Notifications and announcements
+
+### 👨‍🏫 Staff & HR
+- Teacher management
+- Role-based access control
+- Payroll processing
+- Leave management
+
+### 📊 Reports & Analytics
+- Student performance analysis
+- Attendance statistics
+- Financial reports
+- Custom export options (PDF/CSV)
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- PHP >= 8.x
+- Composer
+- Laravel
+- Node.js & npm
+- MySQL or PostgreSQL
+
+### Installation
+
+```bash
+git clone https://github.com/bosslife19/sweetgodheights.git
+
+cd sweetgodheightsschools
+cp .env.example .env
+composer install
+php artisan key:generate
 
 
-## Tons of Features
-INFIX has all in one place. You’ll find everything what you are looking into education management system software.
-
-## User Friendly Interface
-We care! User will never bothered in our real eye catchy user friendly UI & UX Interface design. 
-
-## Proper Documentation
-You know! Smart Idea always comes to well planners. And Our INFIX is Smart for its Well Documentation. 
-
-
-## Powerful Support
-Explore in new support world! It’s now faster & quicker. You’ll find us on Support Ticket, Email, Skype, WhatsApp.
-
-
- 
+php artisan migrate --seed
+npm install && npm run dev
+php artisan serve
