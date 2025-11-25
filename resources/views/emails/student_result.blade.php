@@ -34,7 +34,7 @@
     @stack('css')
 
 </head>
-<h1 style="display:none;">Hello</h1>
+
 @section('title')
     @lang('reports.mark_sheet_report_student')
 @endsection
@@ -427,6 +427,8 @@
                 padding: 5px 4px;
                 background: transparent;
                 border-bottom: 1px solid rgba(130, 139, 178, 0.15) !important;
+                border-right:1px solid rgba(130, 139, 178, 0.15) !important;
+                border-left:1px solid rgba(130, 139, 178, 0.15) !important
             }
 
             #grade_table td {
@@ -438,10 +440,13 @@
                 border-left: 0;
                 text-align: left !important;
                 border-bottom: 1px solid rgba(130, 139, 178, 0.15) !important;
+                                border-right:1px solid rgba(130, 139, 178, 0.15) !important;
+                border-left:1px solid rgba(130, 139, 178, 0.15) !important
             }
             .single-report-admit table tr th {
-                border: 0;
+                border-width: 2px;
                 border-bottom: 1px solid rgba(67, 89, 187, 0.15) !important;
+                border-right: 1px solid rgba(67, 89, 187, 0.15) !important;
                 text-align: left
             }
             .single-report-admit table thead tr th {
@@ -457,6 +462,8 @@
                 font-weight: 400;
                 border: 0;
                 border-bottom: 1px solid rgba(130, 139, 178, 0.15) !important;
+                                border-right:1px solid rgba(130, 139, 178, 0.15) !important;
+                border-left:1px solid rgba(130, 139, 178, 0.15) !important;
                 text-align: left
             }
 
@@ -490,13 +497,19 @@
             <style>
                 .single-report-admit table tr td {
                     border: 1px solid rgba(130, 139, 178, 0.15) !important;
+                                    border-right:1px solid rgba(130, 139, 178, 0.15) !important;
+                border-left:1px solid rgba(130, 139, 178, 0.15) !important
                 }
                 .single-report-admit table thead tr th{
                     border: 1px solid rgba(130, 139, 178, 0.15) !important;
+                                    border-right:1px solid rgba(130, 139, 178, 0.15) !important;
+                border-left:1px solid rgba(130, 139, 178, 0.15) !important
                 }
 
                 .gray_header_table thead tr:first-child th {
                     border: 1px solid rgba(130, 139, 178, 0.15) !important;
+                                    border-right:1px solid rgba(130, 139, 178, 0.15) !important;
+                border-left:1px solid rgba(130, 139, 178, 0.15) !important
                 }
                 .gray_header_table thead th{
                     padding-left: 10px !important;
@@ -507,6 +520,10 @@
                 .single-report-admit table tr th{
                     border: 1px solid rgba(130, 139, 178, 0.15) !important;
                     padding: 8px !important;
+                    border-right: 1px solid rgba(67, 89, 187, 0.15) !important;
+                }
+                td{
+                    border-right: 1px solid rgba(130, 139, 178, 0.15) !important;
                 }
                 .custom_table thead th{
                     text-align: center !important;
@@ -533,7 +550,7 @@
 $studentScore = $positionedScores->firstWhere('student_id', $targetStudentId);
 
 if ($studentScore) {
-    $position = $studentScore->position;
+    $position = $studentScore['position'];
     // You can now use $position as needed
     
 } else {
@@ -669,7 +686,7 @@ if ($studentScore) {
                                                                                 @endphp
                                                                                 @if(@$grades)
                                                                                     <div class="table-responsive">
-                                                                                    <table class="table " id="grade_table">
+                                                                                    {{-- <table class="table " id="grade_table">
                                                                                         <thead>
                                                                                         <tr>
                                                                                             <th>@lang('reports.staring')</th>
@@ -694,7 +711,7 @@ if ($studentScore) {
                                                                                             </tr>
                                                                                         @endforeach
                                                                                         </tbody>
-                                                                                    </table>
+                                                                                    </table> --}}
                                                                                     </div>
                                                                                 @endif
                                                                             </div>
@@ -728,7 +745,7 @@ if ($studentScore) {
                                                             <tr>
                                                                                                                                 <th>@lang('reports.subject_name')</th>
                                                                  @if ($containsCA)
-                                                                <th>CA</th>
+                                                                <th style="border:black solid 2px;">CA</th>
                                                                 <th>EXAM</th>
                                                              @if ($exam_details->title =='THIRD TERM EXAMINATION')
                                                              <th>Cummulative</th> 
@@ -739,21 +756,23 @@ if ($studentScore) {
                                                                 <th>2ND C.A</th>
                                                                 <th>3RD C.A</th>
                                                                 <th>EXAM</th>
-                                                             @if ($exam_details->title =='THIRD TERM EXAMINATION')
+                                                                 @if ($exam_details->title =='THIRD TERM EXAMINATION')
                                                              <th>Cummulative</th> 
                                                                 @endif
+                                                                <th>TOTAL</th>
+                                                            
 
                                                                
                                                             @endif
                                                                 @if (@$generalsettingsResultType != 'mark')
-                                                                    <th>@lang('reports.letter_grade')</th>
+                                                                    <th>Grade</th>
                                                                 @endif
                                                                 <th>@lang('reports.remarks')</th>
                                                                 @if (@$generalsettingsResultType == 'mark')
                                                                     <th>@lang('homework.evaluation')</th>
                                                                     <th>@lang('exam.pass_fail')</th>
                                                                 @endif
-    
+                                                                {{-- <th>Affective Skills</th> --}}
                                                             </tr>
                                                             </thead>
                                                             <tbody>
@@ -777,20 +796,59 @@ if ($studentScore) {
                                                                 $temp_grade=[];
                                                                 $average_passing_mark = averagePassingMark($exam_type_id);
                                                             @endphp
+
+                                                            @php
+                                                            $skills = [];
+@endphp
                                                             @foreach($mark_sheet as $data)
                                                                 @php
                                                                     $temp_grade[]=$data->total_gpa_grade;
                                                                     if ($data->subject_id==$optional_subject) {
                                                                         continue;
                                                                     }
+                                                                     // collect affective skills if available
+        if ($data->Honesty !== null) {
+            $skills['Honesty'] = $data->Honesty;
+        }
+        if ($data->Punctuality !== null) {
+            $skills['Punctuality'] = $data->Punctuality;
+        }
+        if ($data->Attentiveness !== null) {
+            $skills['Attentiveness'] = $data->Attentiveness;
+        }
+         if ($data->Politeness !== null) {
+            $skills['Politeness'] = $data->Politeness;
+        }
+         if ($data['Leadership Skill'] !== null) {
+            $skills['Leadership Skill'] = $data['Leadership Skill'];
+        }
+         if ($data->Cooperation !== null) {
+            $skills['Cooperation'] = $data->Cooperation;
+        }
+         if ($data->Handwriting !== null) {
+            $skills['Handwriting'] = $data->Handwriting;
+        }
+         if ($data['Verbal Fluency'] !== null) {
+            $skills['Verbal Fluency'] = $data['Verbal Fluency'];
+        }
+         if ($data->Sports !== null) {
+            $skills['Sports'] = $data->Sports;
+        }
+         if ($data['Handling Tools'] !== null) {
+            $skills['Handling Tools'] = $data['Handling Tools'];
+        }
                                                                 @endphp
                                                                 <tr>
                                                                     <th>
                                                                         {{$data->subject->subject_name}}
                                                                     </th>
+                                                                    
                                                                     @php
                                                                      $ca = collect($caScores)->firstWhere('subject_id', $data->subject_id);
     $normalizedCa = collect($ca)->keyBy(fn($value, $key) => strtolower($key));
+
+    
+    $cumulative = collect($cumulate)->firstWhere('subject_id', $data->subject_id);
     
 @endphp
 
@@ -803,8 +861,8 @@ if ($studentScore) {
 @if (!isset($ca['CA']))
 
 <td>{{ $normalizedCa['ist ca'] ?? '-' }}</td>
-<td>{{ $normalizedCa['2nd ca'] ?? '-' }}</td>
-<td>{{ $normalizedCa['3rd ca'] ?? '-' }}</td>
+<td>{{ $normalizedCa['2nd'] ?? '-' }}</td>
+<td>{{ $normalizedCa['3rd'] ?? '-' }}</td>
 <td>{{ $normalizedCa['exam'] ?? '-' }}</td>
 
 
@@ -814,7 +872,7 @@ if ($studentScore) {
 
 @endif
 @if ($exam_details->title =='THIRD TERM EXAMINATION')
-    <td>{{ $ca['cummulative'] ?? '-' }}</td>
+    <td>{{ $cumulative['total_marks'] ?? '-' }}</td>
 @endif
                                                                     {{-- <td>
                                                                         <p>
@@ -896,8 +954,25 @@ if ($studentScore) {
                                                                     @php
                                                                         $count++
                                                                     @endphp
+                                                                    
                                                                 </tr>
                                                             @endforeach
+                                                            
+                                                                
+
+@if(!empty($skills))
+    <tr>
+        <th>Affective Skills</th>
+        <td colspan="5">
+            <ul style="list-style:none; padding:0; margin:0;">
+                @foreach($skills as $skillName => $value)
+                    <li>{{ $skillName }}: {{ $value }}</li>
+                @endforeach
+            </ul>
+        </td>
+    </tr>
+@endif
+                                                            
                                                             @if(@$optional_subject_setup->gpa_above)
                                                                 <tr>
                                                                     <td class="nowrap">@lang('reports.average_mark')</td>
@@ -984,6 +1059,8 @@ if ($studentScore) {
                                                             @endif
                                                             </tbody>
                                                         </table>
+                                                       
+                                                       
                                                         </div>
                                                         <div class="col-md-6 offset-md-3">
                                                             <div class="table-responsive">

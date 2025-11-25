@@ -196,3 +196,4 @@ class SmMarkStore extends Model
 ];
 
 }
+

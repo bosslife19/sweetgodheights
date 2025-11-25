@@ -53,7 +53,7 @@
     <?php echo $__env->yieldPushContent('css'); ?>
 
 </head>
-<h1 style="display:none;">Hello</h1>
+
 <?php $__env->startSection('title'); ?>
     <?php echo app('translator')->get('reports.mark_sheet_report_student'); ?>
 <?php $__env->stopSection(); ?>
@@ -446,6 +446,8 @@
                 padding: 5px 4px;
                 background: transparent;
                 border-bottom: 1px solid rgba(130, 139, 178, 0.15) !important;
+                border-right:1px solid rgba(130, 139, 178, 0.15) !important;
+                border-left:1px solid rgba(130, 139, 178, 0.15) !important
             }
 
             #grade_table td {
@@ -457,10 +459,13 @@
                 border-left: 0;
                 text-align: left !important;
                 border-bottom: 1px solid rgba(130, 139, 178, 0.15) !important;
+                                border-right:1px solid rgba(130, 139, 178, 0.15) !important;
+                border-left:1px solid rgba(130, 139, 178, 0.15) !important
             }
             .single-report-admit table tr th {
-                border: 0;
+                border-width: 2px;
                 border-bottom: 1px solid rgba(67, 89, 187, 0.15) !important;
+                border-right: 1px solid rgba(67, 89, 187, 0.15) !important;
                 text-align: left
             }
             .single-report-admit table thead tr th {
@@ -476,6 +481,8 @@
                 font-weight: 400;
                 border: 0;
                 border-bottom: 1px solid rgba(130, 139, 178, 0.15) !important;
+                                border-right:1px solid rgba(130, 139, 178, 0.15) !important;
+                border-left:1px solid rgba(130, 139, 178, 0.15) !important;
                 text-align: left
             }
 
@@ -509,13 +516,19 @@
             <style>
                 .single-report-admit table tr td {
                     border: 1px solid rgba(130, 139, 178, 0.15) !important;
+                                    border-right:1px solid rgba(130, 139, 178, 0.15) !important;
+                border-left:1px solid rgba(130, 139, 178, 0.15) !important
                 }
                 .single-report-admit table thead tr th{
                     border: 1px solid rgba(130, 139, 178, 0.15) !important;
+                                    border-right:1px solid rgba(130, 139, 178, 0.15) !important;
+                border-left:1px solid rgba(130, 139, 178, 0.15) !important
                 }
 
                 .gray_header_table thead tr:first-child th {
                     border: 1px solid rgba(130, 139, 178, 0.15) !important;
+                                    border-right:1px solid rgba(130, 139, 178, 0.15) !important;
+                border-left:1px solid rgba(130, 139, 178, 0.15) !important
                 }
                 .gray_header_table thead th{
                     padding-left: 10px !important;
@@ -526,6 +539,10 @@
                 .single-report-admit table tr th{
                     border: 1px solid rgba(130, 139, 178, 0.15) !important;
                     padding: 8px !important;
+                    border-right: 1px solid rgba(67, 89, 187, 0.15) !important;
+                }
+                td{
+                    border-right: 1px solid rgba(130, 139, 178, 0.15) !important;
                 }
                 .custom_table thead th{
                     text-align: center !important;
@@ -546,6 +563,20 @@
         <?php endif; ?>
        
             <section class="student-details">
+                 <?php
+                                                                   $targetStudentId = $student_detail->id;
+
+$studentScore = $positionedScores->firstWhere('student_id', $targetStudentId);
+
+if ($studentScore) {
+    $position = $studentScore['position'];
+    // You can now use $position as needed
+    
+} else {
+    $position = 'Not found'; // or handle appropriately
+}
+
+                                                                ?>
                 <div class="container-fluid p-0">
                     <div class="white-box mt-40">
                         <div class="row">
@@ -675,32 +706,7 @@
                                                                                 ?>
                                                                                 <?php if(@$grades): ?>
                                                                                     <div class="table-responsive">
-                                                                                    <table class="table " id="grade_table">
-                                                                                        <thead>
-                                                                                        <tr>
-                                                                                            <th><?php echo app('translator')->get('reports.staring'); ?></th>
-                                                                                            <th><?php echo app('translator')->get('reports.ending'); ?></th>
-                                                                                            <?php if(@$generalsettingsResultType != 'mark'): ?>
-                                                                                                <th><?php echo app('translator')->get('exam.gpa'); ?></th>
-                                                                                                <th><?php echo app('translator')->get('exam.grade'); ?></th>
-                                                                                            <?php endif; ?>
-                                                                                            <th><?php echo app('translator')->get('homework.evalution'); ?></th>
-                                                                                        </tr>
-                                                                                        </thead>
-                                                                                        <tbody>
-                                                                                        <?php $__currentLoopData = $grades; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $grade_d): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                                                            <tr>
-                                                                                                <td><?php echo e($grade_d->percent_from); ?></td>
-                                                                                                <td><?php echo e($grade_d->percent_upto); ?></td>
-                                                                                                <?php if(@$generalsettingsResultType != 'mark'): ?>
-                                                                                                    <td><?php echo e($grade_d->gpa); ?></td>
-                                                                                                    <td><?php echo e($grade_d->grade_name); ?></td>
-                                                                                                <?php endif; ?>
-                                                                                                <td class="text-left"><?php echo e($grade_d->description); ?></td>
-                                                                                            </tr>
-                                                                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                                                                        </tbody>
-                                                                                    </table>
+                                                                                    
                                                                                     </div>
                                                                                 <?php endif; ?>
                                                                             </div>
@@ -719,6 +725,11 @@
     
     
                                                         <div class="table-responsive">
+                                                                                                                    <?php
+                                                            $containsCA = isset($caScores[0]['CA']);
+                                                     
+                                               
+                                                        ?>
                                                         <table class="custom_table">
                                                            
                                                             <thead>
@@ -728,23 +739,35 @@
                                                                 </tr>-->
                                                             <tr>
                                                                                                                                 <th><?php echo app('translator')->get('reports.subject_name'); ?></th>
-                                                                <th>1st C.A</th>
+                                                                 <?php if($containsCA): ?>
+                                                                <th style="border:black solid 2px;">CA</th>
+                                                                <th>EXAM</th>
+                                                             <?php if($exam_details->title =='THIRD TERM EXAMINATION'): ?>
+                                                             <th>Cummulative</th> 
+                                                                <?php endif; ?>
+                                                                    
+                                                                <?php else: ?>
+                                                                    <th>1st C.A</th>
                                                                 <th>2ND C.A</th>
                                                                 <th>3RD C.A</th>
                                                                 <th>EXAM</th>
+                                                                 <?php if($exam_details->title =='THIRD TERM EXAMINATION'): ?>
+                                                             <th>Cummulative</th> 
+                                                                <?php endif; ?>
                                                                 <th>TOTAL</th>
-                                                                <?php if($exam_details->title =='Third Term'): ?>
-                                                             <th>Cummulative</th>
+                                                            
+
+                                                               
                                                             <?php endif; ?>
                                                                 <?php if(@$generalsettingsResultType != 'mark'): ?>
-                                                                    <th><?php echo app('translator')->get('reports.letter_grade'); ?></th>
+                                                                    <th>Grade</th>
                                                                 <?php endif; ?>
                                                                 <th><?php echo app('translator')->get('reports.remarks'); ?></th>
                                                                 <?php if(@$generalsettingsResultType == 'mark'): ?>
                                                                     <th><?php echo app('translator')->get('homework.evaluation'); ?></th>
                                                                     <th><?php echo app('translator')->get('exam.pass_fail'); ?></th>
                                                                 <?php endif; ?>
-    
+                                                                
                                                             </tr>
                                                             </thead>
                                                             <tbody>
@@ -768,29 +791,84 @@
                                                                 $temp_grade=[];
                                                                 $average_passing_mark = averagePassingMark($exam_type_id);
                                                             ?>
+
+                                                            <?php
+                                                            $skills = [];
+?>
                                                             <?php $__currentLoopData = $mark_sheet; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                                 <?php
                                                                     $temp_grade[]=$data->total_gpa_grade;
                                                                     if ($data->subject_id==$optional_subject) {
                                                                         continue;
                                                                     }
+                                                                     // collect affective skills if available
+        if ($data->Honesty !== null) {
+            $skills['Honesty'] = $data->Honesty;
+        }
+        if ($data->Punctuality !== null) {
+            $skills['Punctuality'] = $data->Punctuality;
+        }
+        if ($data->Attentiveness !== null) {
+            $skills['Attentiveness'] = $data->Attentiveness;
+        }
+         if ($data->Politeness !== null) {
+            $skills['Politeness'] = $data->Politeness;
+        }
+         if ($data['Leadership Skill'] !== null) {
+            $skills['Leadership Skill'] = $data['Leadership Skill'];
+        }
+         if ($data->Cooperation !== null) {
+            $skills['Cooperation'] = $data->Cooperation;
+        }
+         if ($data->Handwriting !== null) {
+            $skills['Handwriting'] = $data->Handwriting;
+        }
+         if ($data['Verbal Fluency'] !== null) {
+            $skills['Verbal Fluency'] = $data['Verbal Fluency'];
+        }
+         if ($data->Sports !== null) {
+            $skills['Sports'] = $data->Sports;
+        }
+         if ($data['Handling Tools'] !== null) {
+            $skills['Handling Tools'] = $data['Handling Tools'];
+        }
                                                                 ?>
                                                                 <tr>
                                                                     <th>
                                                                         <?php echo e($data->subject->subject_name); ?>
 
                                                                     </th>
+                                                                    
                                                                     <?php
-    $ca = collect($caScores)->firstWhere('subject_id', $data->subject_id);
+                                                                     $ca = collect($caScores)->firstWhere('subject_id', $data->subject_id);
+    $normalizedCa = collect($ca)->keyBy(fn($value, $key) => strtolower($key));
+
+    
+    $cumulative = collect($cumulate)->firstWhere('subject_id', $data->subject_id);
     
 ?>
-<td><?php echo e($ca['Ist CA'] ?? '-'); ?></td>
-<td><?php echo e($ca['2nd CA'] ?? '-'); ?></td>
-<td><?php echo e($ca['3rd CA'] ?? '-'); ?></td>
-<td><?php echo e($ca['Exam'] ?? '-'); ?></td>
 
-<?php if($exam_details->title =='Third Term'): ?>
-    <td><?php echo e($ca['cummulative'] ?? '-'); ?></td>
+
+
+
+
+
+
+<?php if(!isset($ca['CA'])): ?>
+
+<td><?php echo e($normalizedCa['ist ca'] ?? '-'); ?></td>
+<td><?php echo e($normalizedCa['2nd'] ?? '-'); ?></td>
+<td><?php echo e($normalizedCa['3rd'] ?? '-'); ?></td>
+<td><?php echo e($normalizedCa['exam'] ?? '-'); ?></td>
+
+
+<?php else: ?>
+<td><?php echo e($normalizedCa['ca']?? '-'); ?></td> 
+<td><?php echo e($normalizedCa['exam']?? '-'); ?></td> 
+
+<?php endif; ?>
+<?php if($exam_details->title =='THIRD TERM EXAMINATION'): ?>
+    <td><?php echo e($cumulative['total_marks'] ?? '-'); ?></td>
 <?php endif; ?>
                                                                     
                                                                     
@@ -861,8 +939,25 @@
                                                                     <?php
                                                                         $count++
                                                                     ?>
+                                                                    
                                                                 </tr>
                                                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                            
+                                                                
+
+<?php if(!empty($skills)): ?>
+    <tr>
+        <th>Affective Skills</th>
+        <td colspan="5">
+            <ul style="list-style:none; padding:0; margin:0;">
+                <?php $__currentLoopData = $skills; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $skillName => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <li><?php echo e($skillName); ?>: <?php echo e($value); ?></li>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </ul>
+        </td>
+    </tr>
+<?php endif; ?>
+                                                            
                                                             <?php if(@$optional_subject_setup->gpa_above): ?>
                                                                 <tr>
                                                                     <td class="nowrap"><?php echo app('translator')->get('reports.average_mark'); ?></td>
@@ -887,9 +982,7 @@
 
                                                                             </p>
                                                                         </td>
-                                                                        <td>
-                                                                            <p><?php echo e(@subjectHighestMark($exam_type_id, $data->subject->id, $class_id, $section_id)); ?></p>
-                                                                        </td>
+                                                                        
                                                                         <td>
                                                                             <p>
                                                                                 <?php echo e(@$data->total_marks); ?>
@@ -955,11 +1048,17 @@
                                                             <?php endif; ?>
                                                             </tbody>
                                                         </table>
+                                                       
+                                                       
                                                         </div>
                                                         <div class="col-md-6 offset-md-3">
                                                             <div class="table-responsive">
                                                             <table class="table <?php if(resultPrintStatus('vertical_boarder')): ?> mt-5 <?php endif; ?>">
                                                                 <tbody class="spacing">
+                                                                    <tr>
+                                                                        <td>Position</td>
+                                                                        <td><?php echo e($position); ?></td>
+                                                                    </tr>
                                                                 <tr>
                                                                     
                                                                     <td><?php echo app('translator')->get('exam.total_mark'); ?></td>

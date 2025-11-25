@@ -964,8 +964,9 @@
 $studentScore = $positionedScores->firstWhere('student_id', $targetStudentId);
 
 if ($studentScore) {
-    $position = $studentScore->position;
-    // You can now use $position as needed
+    $position = $studentScore['position'];
+
+   
     
 } else {
     $position = 'Not found'; // or handle appropriately
@@ -1005,8 +1006,11 @@ if ($studentScore) {
                                                                     </th>
                                                                     @php
     $ca = collect($caScores)->firstWhere('subject_id', $data->subject_id);
-    
+
      $normalizedCa = collect($ca)->keyBy(fn($value, $key) => strtolower($key));
+
+     $cumulative = collect($cumulate)->firstWhere('subject_id', $data->subject_id);
+     
     
 @endphp
 
@@ -1019,8 +1023,8 @@ if ($studentScore) {
 @if (!isset($ca['CA']))
 
 <td>{{ $normalizedCa['ist ca'] ?? '-' }}</td>
-<td>{{ $normalizedCa['2nd ca'] ?? '-' }}</td>
-<td>{{ $normalizedCa['3rd ca'] ?? '-' }}</td>
+<td>{{ $normalizedCa['2nd'] ?? '-' }}</td>
+<td>{{ $normalizedCa['3rd'] ?? '-' }}</td>
 <td>{{ $normalizedCa['exam'] ?? '-' }}</td>
 
 
@@ -1033,7 +1037,7 @@ if ($studentScore) {
 
 
 @if ($exam_details->title =='THIRD TERM EXAMINATION')
-    <td>{{ $ca['cummulative'] ?? '-' }}</td>
+    <td>{{ $cumulative['total_marks']?? '-' }}</td>
 @endif
 
                                                                     {{-- <td>

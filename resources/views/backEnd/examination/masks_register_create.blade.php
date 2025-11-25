@@ -19,7 +19,7 @@
                     <a href="{{ route('dashboard') }}">@lang('common.dashboard')</a>
                     <a href="#">@lang('exam.examination')</a>
                     <a href="{{ route('marks_register') }}">@lang('exam.marks_register')</a>
-                    <a href="#">@lang('exam.add_marks')</a>
+                    {{-- <a href="#">Helloo</a> --}}
                 </div>
             </div>
         </div>
@@ -208,6 +208,7 @@
                                             <th rowspan="2">@lang('common.student')</th>
                                             <th class="text-center" colspan="{{ $number_of_exam_parts + 1 }}">
                                                 {{ $subjectName->subject_name }}</th>
+                                            
                                             <th rowspan="2">@lang('exam.is_present')</th>
                                         </tr>
                                         <tr>
@@ -215,6 +216,7 @@
                                                 <th>{{ $part->exam_title }} ( {{ $part->exam_mark }} ) </th>
                                             @endforeach
                                             <th>@lang('common.teacher') @lang('reports.remarks')</th>
+                                           
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -360,13 +362,26 @@
                                                 <th rowspan="2">@lang('common.student')</th>
                                                 <th class="text-center" colspan="{{ $number_of_exam_parts + 1 }}">
                                                     {{ $subjectNames->subject_name }}</th>
-                                                <th rowspan="2">@lang('exam.is_present')</th>
+                                                {{-- <th rowspan="2">@lang('exam.is_present')</th> --}}
                                             </tr>
                                             <tr>
                                                 @foreach ($marks_entry_form as $part)
                                                     <th>{{ $part->exam_title }} ( {{ $part->exam_mark }} ) </th>
                                                 @endforeach
+                                                
+           
+                                                <th>Punctuality</th>
+                                                <th>Honesty</th>
+                                                <th>Leadership Skill</th>
+                                                <th>Cooperation</th>
+                                                <th>Attentiveness</th>
+                                                <th>Handwriting</th>
+                                                <th>Verbal Fluency</th>
+                                                <th>Sports</th>
+                                                <th>Handling Tools</th>
+                                                 
                                                 <th>@lang('common.teacher') @lang('reports.remarks')</th>
+                                                
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -435,19 +450,97 @@
                                                             </div>
                                                         </td>
                                                     @endforeach
-                                                    <?php
-                                                    $teacher_remarks = App\SmMarkStore::teacher_remarks($record->student_id, $exam_type->id, $record->class_id, $record->section_id, $subject_id, $record->id);
-                                                    ?>
+
+            
                                                     <td>
                                                         <div class="primary_input">
                                                             <input class="primary_input_field" type="text"
-                                                                name="markStore[{{ $record->id }}][teacher_remarks]"
-                                                                value="{{ $teacher_remarks }}"
-                                                                {{ @($absent_check->attendance_type == 'A' || @$absent_check->attendance_type == '') && !isSkip('exam_attendance') ? 'readonly' : '' }}>
+                                                                name="markStore[{{ $record->id }}][Punctuality]"
+                                                                value=""
+                                                                >
                                                         </div>
                                                     </td>
-                                                    <?php $is_absent_check = App\SmMarkStore::is_absent_check($record->student_id, $part->exam_term_id, $part->class_id, $part->section_id, $part->subject_id, $record->id); ?>
                                                     <td>
+                                                        
+                                                        <div class="primary_input">
+                                                            <input class="primary_input_field" type="text"
+                                                                name="markStore[{{ $record->id }}][Punctuality]"
+                                                                value=""
+                                                                >
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="primary_input">
+                                                            <input class="primary_input_field" type="text"
+                                                                name="markStore[{{ $record->id }}][Honesty]"
+                                                                value=""
+                                                                >
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="primary_input">
+                                                            <input class="primary_input_field" type="text"
+                                                                name="markStore[{{ $record->id }}][leadership_skills]"
+                                                                value=""
+                                                                >
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="primary_input">
+                                                            <input class="primary_input_field" type="text"
+                                                                name="markStore[{{ $record->id }}][Cooperation]"
+                                                                value=""
+                                                                >
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="primary_input">
+                                                            <input class="primary_input_field" type="text"
+                                                                name="markStore[{{ $record->id }}][Attentiveness]"
+                                                                value=""
+                                                                >
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="primary_input">
+                                                            <input class="primary_input_field" type="text"
+                                                                name="markStore[{{ $record->id }}][Handwriting]"
+                                                                value=""
+                                                                >
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="primary_input">
+                                                            <input class="primary_input_field" type="text"
+                                                                name="markStore[{{ $record->id }}][verbal_fluency]"
+                                                                value=""
+                                                                >
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="primary_input">
+                                                            <input class="primary_input_field" type="text"
+                                                                name="markStore[{{ $record->id }}][Sports]"
+                                                                value=""
+                                                                >
+                                                        </div>
+                                                    </td>
+                                                     <td>
+                                                        <div class="primary_input">
+                                                            <input class="primary_input_field" type="text"
+                                                                name="markStore[{{ $record->id }}][handling_tools]"
+                                                                value=""
+                                                                >
+                                                        </div>
+                                                    </td>
+                                                    
+                                                    <?php
+                                                    $teacher_remarks = App\SmMarkStore::teacher_remarks($record->student_id, $exam_type->id, $record->class_id, $record->section_id, $subject_id, $record->id);
+                                                    ?>
+                                                     
+                                                   
+                                                    <?php $is_absent_check = App\SmMarkStore::is_absent_check($record->student_id, $part->exam_term_id, $part->class_id, $part->section_id, $part->subject_id, $record->id); ?>
+                                                    {{-- <td>
                                                         <div class="primary_input">
                                                             @if (@$absent_check->attendance_type == 'P')
                                                                 <button class="primary-btn small fix-gr-bg"
@@ -457,6 +550,14 @@
                                                                     class="primary-btn small bg-danger text-white border-0"
                                                                     type="button">@lang('exam.absent')</button>
                                                             @endif
+                                                        </div>
+                                                    </td> --}}
+                                                     <td>
+                                                        <div class="primary_input">
+                                                            <input class="primary_input_field" type="text"
+                                                                name="markStore[{{ $record->id }}][teacher_remarks]"
+                                                                value="{{ $teacher_remarks }}"
+                                                                {{ @($absent_check->attendance_type == 'A' || @$absent_check->attendance_type == '') && !isSkip('exam_attendance') ? 'readonly' : '' }}>
                                                         </div>
                                                     </td>
                                                 </tr>

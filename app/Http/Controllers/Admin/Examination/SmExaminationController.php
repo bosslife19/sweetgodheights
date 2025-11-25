@@ -58,6 +58,7 @@ use App\Http\Controllers\Admin\StudentInfo\SmStudentReportController;
 use App\Http\Requests\Admin\Examination\SmExamAttendanceSearchRequest;
 use App\Mail\MarkSheetMail;
 use App\Models\StudentResultReport;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -3010,38 +3011,100 @@ class SmExaminationController extends Controller
     ->pluck('ca_scores')
     ->toArray();
 
-       $scores = SmResultStore::where([
+    $cumulate = SmMarkStore::where([
     ['class_id', $class_id],
     ['section_id', $section_id],
-    ['exam_type_id', $request->exam]
 ])
 ->where('school_id', Auth::user()->school_id)
-->get();
+->whereNotNull('ca_scores')
+->get()
+->groupBy(function ($record) {
+    return $record->student_id . '-' . $record->subject_id; // group by student and subject
+})
+->map(function ($records, $key) {
+    [$student_id, $subject_id] = explode('-', $key);
+
+    $total = $records->sum(function ($record) {
+        $scores = $record->ca_scores;
+        unset($scores['subject_id']);
+
+        return collect($scores)->map(fn($v) => (int) $v)->sum();
+    });
+
+    return [
+        'student_id' => (int) $student_id,
+        'subject_id' => (int) $subject_id,
+        'total_marks' => $total,
+    ];
+})
+->values();
 
 
-// Step 1: Sort descending by total_marks
-$scores = $scores->sortByDesc('total_marks')->values();
-function ordinal($number) {
-    if (!in_array(($number % 100), [11, 12, 13])) {
-        switch ($number % 10) {
-            case 1:  return $number . 'st';
-            case 2:  return $number . 'nd';
-            case 3:  return $number . 'rd';
-        }
+
+
+    $results = SmMarkStore::where([
+    ['class_id', $class_id],
+    ['section_id', $section_id],
+    ['exam_term_id', $request->exam],
+])
+->where('school_id', Auth::user()->school_id)
+->whereNotNull('ca_scores')
+->get()
+->groupBy('student_id')
+->map(function ($records, $student_id) {
+   $total = $records->sum(function ($record) {
+   $scores = $record->ca_scores;
+    
+    // Remove unwanted keys like 'subject_id' if present
+    unset($scores['subject_id']);
+
+    // Convert all remaining values to integers and sum
+    return collect($scores)->map(fn($v) => (int) $v)->sum();
+});
+
+    return [
+        'student_id' => $student_id,
+        'total_marks' => $total,
+    ];
+})
+->values();
+
+$positionedScores = $results->sortByDesc('total_marks')->values();
+function ordinal($number)
+{
+    $suffixes = ['th','st','nd','rd','th','th','th','th','th','th'];
+    
+    if ((($number % 100) >= 11) && (($number % 100) <= 13)) {
+        return $number . 'th';
     }
-    return $number . 'th';
+
+    return $number . $suffixes[$number % 10];
 }
 
-// Step 2: Assign position
-$positionedScores = $scores->map(function ($item, $index) {
-    $rank = $index + 1;
-    $item->setAttribute('position', ordinal($rank)); // this works better with Eloquent models
+
+$positionedScores = $positionedScores->map(function ($item, $index) use ($positionedScores) {
+    static $position = 1;
+    static $lastScore = null;
+    static $skip = 0;
+
+    if ($lastScore !== null && $item['total_marks'] == $lastScore) {
+        $skip++;
+    } else {
+        $position += $skip;
+        $skip = 1;
+    }
+
+    $lastScore = $item['total_marks'];
+
+    $item['position'] = ordinal($position); // convert to 1st, 2nd, etc.
     return $item;
 });
 
 
 
-// Helper function (define this in global helpers or within the controller)
+
+
+
 
 
 
@@ -3124,6 +3187,7 @@ $positionedScores = $scores->map(function ($item, $index) {
                     'exams',
                     'positionedScores',
                     'classes',
+                    'cumulate',
                     'marks_register',
                     'subjects',
                     'class',
