@@ -856,9 +856,9 @@ if ($studentScore) {
 
 <?php if(!isset($ca['CA'])): ?>
 
-<td><?php echo e($normalizedCa['ist ca'] ?? '-'); ?></td>
-<td><?php echo e($normalizedCa['2nd'] ?? '-'); ?></td>
-<td><?php echo e($normalizedCa['3rd'] ?? '-'); ?></td>
+<td><?php echo e($normalizedCa['1st ca'] ?? '-'); ?></td>
+<td><?php echo e($normalizedCa['2nd ca'] ?? '-'); ?></td>
+<td><?php echo e($normalizedCa['3rd ca'] ?? '-'); ?></td>
 <td><?php echo e($normalizedCa['exam'] ?? '-'); ?></td>
 
 

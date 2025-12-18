@@ -1,4 +1,4 @@
-<?php if (! $__env->hasRenderedOnce('63bf9a24-7637-4a96-ba8f-06070b7f8a69')): $__env->markAsRenderedOnce('63bf9a24-7637-4a96-ba8f-06070b7f8a69');
+<?php if (! $__env->hasRenderedOnce('850ed4bd-e7ed-4ec4-8875-4e17be92003b')): $__env->markAsRenderedOnce('850ed4bd-e7ed-4ec4-8875-4e17be92003b');
 $__env->startPush(config('pagebuilder.site_style_var')); ?>
     <style>
         a.event_title h4 {

@@ -860,9 +860,9 @@ if ($studentScore) {
 
 @if (!isset($ca['CA']))
 
-<td>{{ $normalizedCa['ist ca'] ?? '-' }}</td>
-<td>{{ $normalizedCa['2nd'] ?? '-' }}</td>
-<td>{{ $normalizedCa['3rd'] ?? '-' }}</td>
+<td>{{ $normalizedCa['1st ca'] ?? '-' }}</td>
+<td>{{ $normalizedCa['2nd ca'] ?? '-' }}</td>
+<td>{{ $normalizedCa['3rd ca'] ?? '-' }}</td>
 <td>{{ $normalizedCa['exam'] ?? '-' }}</td>
 
 

@@ -18,7 +18,7 @@
                     <a href="<?php echo e(route('dashboard')); ?>"><?php echo app('translator')->get('common.dashboard'); ?></a>
                     <a href="#"><?php echo app('translator')->get('exam.examination'); ?></a>
                     <a href="<?php echo e(route('marks_register')); ?>"><?php echo app('translator')->get('exam.marks_register'); ?></a>
-                    <a href="#">Helloo</a>
+                    
                 </div>
             </div>
         </div>

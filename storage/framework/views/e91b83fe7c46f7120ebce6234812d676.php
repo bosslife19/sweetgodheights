@@ -924,7 +924,7 @@
                                                                 <?php if($containsCA): ?>
                                                                 <th>CA</th>
                                                                 <th>EXAM</th>
-                                                                                                                                <?php if($exam_details->title =='THIRD TERM EXAMINATION'): ?>
+                                                            <?php if(strtolower($exam_details->title) === 'third term examination'): ?>
                                                              <th>Cummulative</th> 
                                                                 <?php endif; ?>
                                                                     
@@ -934,7 +934,7 @@
                                                                 <th>3RD C.A</th>
                                                                 <th>EXAM</th>
                                                                
-                                                             <?php if($exam_details->title =='THIRD TERM EXAMINATION'): ?>
+                                                            <?php if(strtolower($exam_details->title) === 'third term examination'): ?>
                                                              <th>Cummulative</th> 
                                                                 <?php endif; ?>
 
@@ -1020,9 +1020,9 @@ if ($studentScore) {
 
 <?php if(!isset($ca['CA'])): ?>
 
-<td><?php echo e($normalizedCa['ist ca'] ?? '-'); ?></td>
-<td><?php echo e($normalizedCa['2nd'] ?? '-'); ?></td>
-<td><?php echo e($normalizedCa['3rd'] ?? '-'); ?></td>
+<td><?php echo e($normalizedCa['1st ca'] ?? '-'); ?></td>
+<td><?php echo e($normalizedCa['2nd ca'] ?? '-'); ?></td>
+<td><?php echo e($normalizedCa['3rd ca'] ?? '-'); ?></td>
 <td><?php echo e($normalizedCa['exam'] ?? '-'); ?></td>
 
 
@@ -1034,7 +1034,7 @@ if ($studentScore) {
 
 
 
-<?php if($exam_details->title =='THIRD TERM EXAMINATION'): ?>
+<?php if(strtolower($exam_details->title) === 'third term examination'): ?>
     <td><?php echo e($cumulative['total_marks']?? '-'); ?></td>
 <?php endif; ?>
 

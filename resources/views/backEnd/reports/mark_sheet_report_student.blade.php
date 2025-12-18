@@ -927,7 +927,7 @@
                                                                 @if ($containsCA)
                                                                 <th>CA</th>
                                                                 <th>EXAM</th>
-                                                                                                                                @if ($exam_details->title =='THIRD TERM EXAMINATION')
+                                                            @if (strtolower($exam_details->title) === 'third term examination')
                                                              <th>Cummulative</th> 
                                                                 @endif
                                                                     
@@ -937,7 +937,7 @@
                                                                 <th>3RD C.A</th>
                                                                 <th>EXAM</th>
                                                                
-                                                             @if ($exam_details->title =='THIRD TERM EXAMINATION')
+                                                            @if (strtolower($exam_details->title) === 'third term examination')
                                                              <th>Cummulative</th> 
                                                                 @endif
 
@@ -1022,9 +1022,9 @@ if ($studentScore) {
 
 @if (!isset($ca['CA']))
 
-<td>{{ $normalizedCa['ist ca'] ?? '-' }}</td>
-<td>{{ $normalizedCa['2nd'] ?? '-' }}</td>
-<td>{{ $normalizedCa['3rd'] ?? '-' }}</td>
+<td>{{ $normalizedCa['1st ca'] ?? '-' }}</td>
+<td>{{ $normalizedCa['2nd ca'] ?? '-' }}</td>
+<td>{{ $normalizedCa['3rd ca'] ?? '-' }}</td>
 <td>{{ $normalizedCa['exam'] ?? '-' }}</td>
 
 
@@ -1036,7 +1036,7 @@ if ($studentScore) {
 
 
 
-@if ($exam_details->title =='THIRD TERM EXAMINATION')
+@if (strtolower($exam_details->title) === 'third term examination')
     <td>{{ $cumulative['total_marks']?? '-' }}</td>
 @endif
 

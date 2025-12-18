@@ -526,7 +526,7 @@ $totalCA = 0;
 
 
 foreach ($aggregate as $item) {
-    $totalCA += ($item['Ist CA'] ?? 0) + ($item['2nd CA'] ?? 0) + ($item['3rd CA'] ?? 0) + ($item['Exam'] ?? 0);
+    $totalCA += ($item['1st CA'] ?? 0) + ($item['2nd CA'] ?? 0) + ($item['3rd CA'] ?? 0) + ($item['Exam'] ?? 0);
 }
 
 
@@ -628,7 +628,7 @@ $totalCA = 0;
 
 
 foreach ($aggregate as $item) {
-    $totalCA += ($item['Ist CA'] ?? 0) + ($item['2nd CA'] ?? 0) + ($item['3rd CA'] ?? 0) + ($item['Exam'] ?? 0);
+    $totalCA += ($item['1st CA'] ?? 0) + ($item['2nd CA'] ?? 0) + ($item['3rd CA'] ?? 0) + ($item['Exam'] ?? 0);
 }
 
 

@@ -1,4 +1,4 @@
-<?php if (! $__env->hasRenderedOnce('f4c4921d-291e-4dc7-bf09-8b8cfa0129df')): $__env->markAsRenderedOnce('f4c4921d-291e-4dc7-bf09-8b8cfa0129df');
+<?php if (! $__env->hasRenderedOnce('65a76623-b0cb-4aa5-8602-6fc9d96bbf22')): $__env->markAsRenderedOnce('65a76623-b0cb-4aa5-8602-6fc9d96bbf22');
 $__env->startPush(config('pagebuilder.site_style_var')); ?>
     <link rel="stylesheet" href="<?php echo e(asset('public/theme/edulia/packages/carousel/owl.carousel.min.css')); ?>">
 <?php $__env->stopPush(); endif; ?>
@@ -23,7 +23,7 @@ $__env->startPush(config('pagebuilder.site_style_var')); ?>
 <?php unset($__componentOriginal4dea201d382b663324e524ef479406ce); ?>
 <?php endif; ?>
 
-<?php if (! $__env->hasRenderedOnce('4aa6895c-bdc6-4e3c-84c1-86f9314fe5e0')): $__env->markAsRenderedOnce('4aa6895c-bdc6-4e3c-84c1-86f9314fe5e0');
+<?php if (! $__env->hasRenderedOnce('9112dfcd-a512-4a54-bc7e-7e78c881c843')): $__env->markAsRenderedOnce('9112dfcd-a512-4a54-bc7e-7e78c881c843');
 $__env->startPush(config('pagebuilder.site_script_var')); ?>
     <script src="<?php echo e(asset('public/theme/edulia/packages/carousel/owl.carousel.min.js')); ?>"></script>
     <script>
