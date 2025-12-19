@@ -93,6 +93,7 @@ use App\SmExamSetting;
 use App\SmMarksRegister;
 use App\SmMarkStore;
 use App\SmResultStore;
+use App\SmSubject;
 use App\YearCheck;
 use Illuminate\Support\Facades\Storage;
 
@@ -2406,6 +2407,20 @@ $positionedScores = $positionedScores->map(function ($item, $index) use ($positi
                     ->where('academic_id', getAcademicId())
                     ->where('school_id', Auth::user()->school_id);
                 $subjects = $examSubjects;
+                $totalObtainable = 0;
+
+foreach ($subjects as $subject) {
+
+   
+    
+
+    $totalObtainable += subjectFullMark(
+        $exam_id,
+        $subject->id,
+        $class_id,
+        $section_id
+    );
+}
 
                 $section_id = $section_id;
                 $class_id =$class_id;
@@ -2497,13 +2512,144 @@ $positionedScores = $positionedScores->map(function ($item, $index) use ($positi
     ->pluck('ca_scores')
     ->toArray();
 
+    $totalStudentsInClass = StudentRecord::where('class_id', $class_id)
+    ->where('section_id', $section_id)
+    ->where('academic_id', getAcademicId())
+    ->where('is_promote', 0)
+    ->where('school_id', Auth::user()->school_id)
+    ->count();
+
+// $subjectPositions = $subjectScores->map(function ($subject) {
+
+//     $sorted = $subject['students']
+//         ->sortByDesc('total_marks')
+//         ->values();
+
+//     $position = 1;
+//     $lastScore = null;
+//     $skip = 0;
+
+//     $ranked = $sorted->map(function ($item) use (&$position, &$lastScore, &$skip) {
+
+//         if ($lastScore !== null && $item['total_marks'] == $lastScore) {
+//             $skip++;
+//         } else {
+//             $position += $skip;
+//             $skip = 1;
+//         }
+
+//         $lastScore = $item['total_marks'];
+
+//         $item['position'] = ordinal($position); // 1st, 2nd, 3rd
+//         return $item;
+//     });
+
+//     return [
+//         'subject_id' => $subject['subject_id'],
+//         'positions' => $ranked,
+//     ];
+// });
+$studentSubjectPositions = SmMarkStore::where([
+        ['class_id', $class_id],
+        ['section_id', $section_id],
+        ['exam_term_id', $exam_id],
+    ])
+    ->where('school_id', Auth::user()->school_id)
+    ->whereNotNull('ca_scores')
+    ->get()
+    ->groupBy('subject_id')
+    ->map(function ($records, $subject_id) use ($student_id) {
+
+        // Total score per student for this subject
+        $scores = $records->groupBy('student_id')->map(function ($studentRecords) {
+            $total = $studentRecords->sum(function ($record) {
+                $scores = $record->ca_scores;
+                unset($scores['subject_id']);
+
+                return collect($scores)->map(fn ($v) => (int) $v)->sum();
+            });
+
+            return [
+                'student_id' => $studentRecords->first()->student_id,
+                'total_marks' => $total,
+            ];
+        })->values()->sortByDesc('total_marks')->values();
+
+        // Rank students
+        $position = 1;
+        $lastScore = null;
+        $skip = 0;
+        $currentStudentPosition = null;
+        $currentStudentScore = null;
+
+        foreach ($scores as $item) {
+            if ($lastScore !== null && $item['total_marks'] == $lastScore) {
+                $skip++;
+            } else {
+                $position += $skip;
+                $skip = 1;
+            }
+
+            $lastScore = $item['total_marks'];
+
+            if ($item['student_id'] == $student_id) {
+                $currentStudentPosition = ordinal($position);
+                $currentStudentScore = $item['total_marks'];
+                break; // 👈 stop once we find the student
+            }
+        }
+
+        return [
+            'subject_id' => $subject_id,
+            'score' => $currentStudentScore,
+            'position' => $currentStudentPosition,
+        ];
+    });
+
+    // Prepare subject stats
+$subjectStats = [];
+$allsubs = SmSubject::where('academic_id', getAcademicId())
+    ->where('school_id', Auth::user()->school_id)
+    ->get();
+foreach ($allsubs as $subject) {
+    $subjectScores = SmResultStore::where([
+        ['class_id', $class_id],
+        ['section_id', $section_id],
+        ['exam_type_id', $exam_id],
+        ['subject_id', $subject->id],
+    ])
+    ->where('school_id', Auth::user()->school_id)
+    ->pluck('total_marks') // get all student scores for this subject
+    ->map(fn($mark) => (int) $mark);
+    
+
+    if ($subjectScores->isNotEmpty()) {
+        $subjectStats[$subject->id] = [
+            'max' => $subjectScores->max(),
+            'min' => $subjectScores->min(),
+            'average' => round($subjectScores->avg(), 2),
+        ];
+    } else {
+        $subjectStats[$subject->id] = [
+            'max' => 0,
+            'min' => 0,
+            'average' => 0,
+        ];
+    }
+}
+
+
+
 
 
             return [
     'optional_subject' => $optional_subject,
+    'totalStudentsInClass' => $totalStudentsInClass,
+    'subjectStats' => $subjectStats,
     'caScores'=>$caScores,
     'classes' => $classes,
     'studentDetails' => $studentDetails,
+    'studentSubjectPositions'=>$studentSubjectPositions,
     'exams' => $exams,
     'marks_register' => $marks_register,
     'subjects' => $subjects,
@@ -2527,6 +2673,7 @@ $positionedScores = $positionedScores->map(function ($item, $index) use ($positi
     'total_class_days' => $total_class_days,
     'student_attendance' => $student_attendance,
     'optional_subject_setup' => $optional_subject_setup,
+    'totalObtainable' => $totalObtainable,
             ];
 
             
@@ -2548,7 +2695,7 @@ $positionedScores = $positionedScores->map(function ($item, $index) use ($positi
     
     $data = $this->prepareMarkSheetData($request->exam_id, $request->class_id, $request->section_id, $request->student_id);
 
-    return view('emails.student_result')->with($data);
+    return view('emails.studentresult')->with($data);
     
     // $report = StudentResultReport::where('class_id', $request->class_id)
     //     ->where('section_id', $request->section_id)

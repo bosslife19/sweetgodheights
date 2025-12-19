@@ -738,7 +738,7 @@ if ($studentScore) {
                                                                     <th colspan="5"><?php echo e($exam_details->title); ?></th>
                                                                 </tr>-->
                                                             <tr>
-                                                                                                                                <th><?php echo app('translator')->get('reports.subject_name'); ?></th>
+                                                             <th><?php echo app('translator')->get('reports.subject_name'); ?></th>
                                                                  <?php if($containsCA): ?>
                                                                 <th style="border:black solid 2px;">CA</th>
                                                                 <th>EXAM</th>

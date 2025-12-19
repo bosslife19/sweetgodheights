@@ -743,7 +743,7 @@ if ($studentScore) {
                                                                     <th colspan="5">{{$exam_details->title}}</th>
                                                                 </tr>-->
                                                             <tr>
-                                                                                                                                <th>@lang('reports.subject_name')</th>
+                                                             <th>@lang('reports.subject_name')</th>
                                                                  @if ($containsCA)
                                                                 <th style="border:black solid 2px;">CA</th>
                                                                 <th>EXAM</th>
