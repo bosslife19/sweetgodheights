@@ -2,6 +2,7 @@
     <?php echo app('translator')->get('reports.mark_sheet_report_student'); ?>
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('mainContent'); ?>
+
     <style>
         th {
             border: 1px solid black;

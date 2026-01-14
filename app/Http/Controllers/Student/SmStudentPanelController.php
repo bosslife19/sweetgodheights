@@ -2471,6 +2471,19 @@ foreach ($subjects as $subject) {
                 $marks_register = SmMarksRegister::where('exam_id', $exam_id)
                     ->where('student_id', $student_id)
                     ->first();
+                    $studentRecordId = StudentRecord::where([
+                        ['student_id', $student_id],
+                        ['class_id', $class_id],
+                        ['section_id', $section_id],
+                    ])->value('id');
+
+                    $affectiveSkills = SmResultStore::where([
+                        ['student_record_id', $studentRecordId],
+                        ['exam_type_id', $exam_id],
+                        ['class_id', $class_id],
+                        ['section_id', $section_id],
+                    ])->first(); // <-- IMPORTANT: use first()
+                    
 
                 $subjects = SmAssignSubject::where('class_id', $class_id)
                     ->where('section_id', $section_id)
@@ -2641,7 +2654,6 @@ foreach ($allsubs as $subject) {
 
 
 
-
             return [
     'optional_subject' => $optional_subject,
     'totalStudentsInClass' => $totalStudentsInClass,
@@ -2674,6 +2686,7 @@ foreach ($allsubs as $subject) {
     'student_attendance' => $student_attendance,
     'optional_subject_setup' => $optional_subject_setup,
     'totalObtainable' => $totalObtainable,
+    'affectiveSkills' =>$affectiveSkills
             ];
 
             

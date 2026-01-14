@@ -3,6 +3,7 @@
     @lang('reports.mark_sheet_report_student')
 @endsection
 @section('mainContent')
+
     <style>
         th {
             border: 1px solid black;

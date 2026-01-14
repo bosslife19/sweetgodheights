@@ -18,7 +18,7 @@
                     <a href="<?php echo e(route('dashboard')); ?>"><?php echo app('translator')->get('common.dashboard'); ?></a>
                     <a href="#"><?php echo app('translator')->get('exam.examination'); ?></a>
                     <a href="<?php echo e(route('marks_register')); ?>"><?php echo app('translator')->get('exam.marks_register'); ?></a>
-                    
+                    <a href="#"><?php echo app('translator')->get('exam.add_marks'); ?></a>
                 </div>
             </div>
         </div>
@@ -215,6 +215,9 @@
                         <input type="hidden" name="un_semester_label_id" value="<?php echo e(@$un_semester_label->id); ?>">
                         <input type="hidden" name="un_section_id" value="<?php echo e(@$un_section->id); ?>">
 
+
+                       
+                        
                         <div class="row">
                             <div class="col-lg-12">
                                 <table class="table school-table-style" cellspacing="0" width="100%">
@@ -225,7 +228,6 @@
                                             <th rowspan="2"><?php echo app('translator')->get('common.student'); ?></th>
                                             <th class="text-center" colspan="<?php echo e($number_of_exam_parts + 1); ?>">
                                                 <?php echo e($subjectName->subject_name); ?></th>
-                                            
                                             <th rowspan="2"><?php echo app('translator')->get('exam.is_present'); ?></th>
                                         </tr>
                                         <tr>
@@ -233,7 +235,6 @@
                                                 <th><?php echo e($part->exam_title); ?> ( <?php echo e($part->exam_mark); ?> ) </th>
                                             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             <th><?php echo app('translator')->get('common.teacher'); ?> <?php echo app('translator')->get('reports.remarks'); ?></th>
-                                           
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -348,6 +349,60 @@
                     </div>
                 <?php else: ?>
                     <div class="container-fluid p-0">
+                        <form action="<?php echo e(route('result.affective.store')); ?>" method="POST">
+                            <?php echo csrf_field(); ?>
+                        
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Admission No</th>
+                                        <th>Student</th>
+                                        <th>Honesty</th>
+                                        <th>Politeness</th>
+                                        <th>Neatness</th>
+                                        <th>Punctuality</th>
+                                        
+                                        <th>Cooperation</th>
+                                        <th>Attentiveness</th>
+                                        <th>Handwriting</th>
+                                        <th>Sports</th>
+                                        <th>Attendance</th>
+                                       
+                                    </tr>
+                                </thead>
+                        
+                                <tbody>
+                                    <?php $__currentLoopData = $students; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $student): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <tr>
+                                            <td><?php echo e($student->studentDetail->admission_no); ?></td>
+                                            <td><?php echo e($student->studentDetail->full_name); ?></td>
+                        
+                                            <?php $rid = $student->id; ?>
+                        
+                                            <td><input type="number" min="1" max="10" name="results[<?php echo e($rid); ?>][Honesty]" class="form-control"></td>
+                                            <td><input type="number" min="1" max="10" name="results[<?php echo e($rid); ?>][Politeness]" class="form-control"></td>
+                                            <td><input type="number" min="1" max="10" name="results[<?php echo e($rid); ?>][Neatness]" class="form-control"></td>
+                                            <td><input type="number" min="1" max="10" name="results[<?php echo e($rid); ?>][Punctuality]" class="form-control"></td>
+                                            
+                                            <td><input type="number" min="1" max="10" name="results[<?php echo e($rid); ?>][Cooperation]" class="form-control"></td>
+                                            <td><input type="number" min="1" max="10" name="results[<?php echo e($rid); ?>][Attentiveness]" class="form-control"></td>
+                                            <td><input type="number" min="1" max="10" name="results[<?php echo e($rid); ?>][Handwriting]" class="form-control"></td>
+                                            <td><input type="number" min="1" max="10" name="results[<?php echo e($rid); ?>][Sports]" class="form-control"></td>
+                        
+                                            <td>
+                                                <input type="number" min="0" name="results[<?php echo e($rid); ?>][Attendance]" class="form-control">
+                                            </td>
+                        
+                                            
+                                        </tr>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </tbody>
+                            </table>
+                        
+                            <button class="btn btn-primary">Save Affective Skills</button>
+                        </form>
+                        
+                        
                         <div class="white-box mt-40">
                         <div class="row">
                             <div class="col-lg-6 col-md-6">
@@ -361,6 +416,7 @@
                                 </div>
                             </div>
                         </div>
+                       
 
                         <?php echo e(Form::open(['class' => 'form-horizontal', 'route' => 'marks_register_store', 'method' => 'POST', 'id' => 'marks_register_store'])); ?>
 
@@ -382,26 +438,13 @@
                                                 <th rowspan="2"><?php echo app('translator')->get('common.student'); ?></th>
                                                 <th class="text-center" colspan="<?php echo e($number_of_exam_parts + 1); ?>">
                                                     <?php echo e($subjectNames->subject_name); ?></th>
-                                                
+                                                <th rowspan="2"><?php echo app('translator')->get('exam.is_present'); ?></th>
                                             </tr>
                                             <tr>
                                                 <?php $__currentLoopData = $marks_entry_form; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $part): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                                     <th><?php echo e($part->exam_title); ?> ( <?php echo e($part->exam_mark); ?> ) </th>
                                                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                                
-           
-                                                <th>Punctuality</th>
-                                                <th>Honesty</th>
-                                                <th>Leadership Skill</th>
-                                                <th>Cooperation</th>
-                                                <th>Attentiveness</th>
-                                                <th>Handwriting</th>
-                                                <th>Verbal Fluency</th>
-                                                <th>Sports</th>
-                                                <th>Handling Tools</th>
-                                                 
                                                 <th><?php echo app('translator')->get('common.teacher'); ?> <?php echo app('translator')->get('reports.remarks'); ?></th>
-                                                
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -472,103 +515,28 @@
                                                             </div>
                                                         </td>
                                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-
-            
-                                                    <td>
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[<?php echo e($record->id); ?>][Punctuality]"
-                                                                value=""
-                                                                >
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[<?php echo e($record->id); ?>][Punctuality]"
-                                                                value=""
-                                                                >
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[<?php echo e($record->id); ?>][Honesty]"
-                                                                value=""
-                                                                >
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[<?php echo e($record->id); ?>][leadership_skills]"
-                                                                value=""
-                                                                >
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[<?php echo e($record->id); ?>][Cooperation]"
-                                                                value=""
-                                                                >
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[<?php echo e($record->id); ?>][Attentiveness]"
-                                                                value=""
-                                                                >
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[<?php echo e($record->id); ?>][Handwriting]"
-                                                                value=""
-                                                                >
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[<?php echo e($record->id); ?>][verbal_fluency]"
-                                                                value=""
-                                                                >
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[<?php echo e($record->id); ?>][Sports]"
-                                                                value=""
-                                                                >
-                                                        </div>
-                                                    </td>
-                                                     <td>
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[<?php echo e($record->id); ?>][handling_tools]"
-                                                                value=""
-                                                                >
-                                                        </div>
-                                                    </td>
-                                                    
                                                     <?php
                                                     $teacher_remarks = App\SmMarkStore::teacher_remarks($record->student_id, $exam_type->id, $record->class_id, $record->section_id, $subject_id, $record->id);
                                                     ?>
-                                                     
-                                                   
-                                                    <?php $is_absent_check = App\SmMarkStore::is_absent_check($record->student_id, $part->exam_term_id, $part->class_id, $part->section_id, $part->subject_id, $record->id); ?>
-                                                    
-                                                     <td>
+                                                    <td>
                                                         <div class="primary_input">
                                                             <input class="primary_input_field" type="text"
                                                                 name="markStore[<?php echo e($record->id); ?>][teacher_remarks]"
                                                                 value="<?php echo e($teacher_remarks); ?>"
                                                                 <?php echo e(@($absent_check->attendance_type == 'A' || @$absent_check->attendance_type == '') && !isSkip('exam_attendance') ? 'readonly' : ''); ?>>
+                                                        </div>
+                                                    </td>
+                                                    <?php $is_absent_check = App\SmMarkStore::is_absent_check($record->student_id, $part->exam_term_id, $part->class_id, $part->section_id, $part->subject_id, $record->id); ?>
+                                                    <td>
+                                                        <div class="primary_input">
+                                                            <?php if(@$absent_check->attendance_type == 'P'): ?>
+                                                                <button class="primary-btn small fix-gr-bg"
+                                                                    type="button"><?php echo app('translator')->get('exam.present'); ?></button>
+                                                            <?php else: ?>
+                                                                <button
+                                                                    class="primary-btn small bg-danger text-white border-0"
+                                                                    type="button"><?php echo app('translator')->get('exam.absent'); ?></button>
+                                                            <?php endif; ?>
                                                         </div>
                                                     </td>
                                                 </tr>

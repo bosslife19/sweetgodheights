@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class SmResultStore extends Model
 {
     use HasFactory;
+
+    protected $guarded = [];
     public function studentInfo(){
     	return $this->belongsTo('App\SmStudent', 'student_id', 'id');
     }

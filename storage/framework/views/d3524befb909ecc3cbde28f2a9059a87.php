@@ -9,105 +9,137 @@
         margin: 20px;
         color: #000;
         font-size: 13px;
+        background-color: #f5f5f5;
     }
 
     .container {
         max-width: 900px;
         margin: auto;
+        background: #fff;
         border: 2px solid #000;
-        padding: 15px;
+        padding: 20px 25px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
 
     h1, h2, h3 {
         text-align: center;
-        margin: 4px 0;
+        margin: 5px 0;
     }
 
     h1 {
         font-size: 18px;
         font-weight: bold;
         text-transform: uppercase;
+        letter-spacing: 1px;
     }
 
     h2 {
         font-size: 15px;
         font-weight: bold;
         text-transform: uppercase;
+        color: #1a1a1a;
     }
 
     h3 {
         font-size: 14px;
         font-weight: bold;
+        color: #333;
     }
 
     .school-name {
         font-weight: bold;
         text-transform: uppercase;
+        color: #000;
     }
 
     .info-table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 10px;
+        margin-top: 15px;
         font-size: 13px;
     }
 
     .info-table td {
-        padding: 4px;
+        padding: 6px 4px;
         vertical-align: top;
     }
 
     .info-table .label {
         font-weight: bold;
-        width: 20%;
+        width: 25%;
     }
 
     .info-table .value {
-        width: 30%;
+        width: 25%;
     }
 
     table.result-table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 12px;
+        margin-top: 15px;
         font-size: 12px;
     }
 
     .result-table th,
     .result-table td {
         border: 1px solid #000;
-        padding: 4px;
+        padding: 6px;
         text-align: center;
     }
 
     .result-table th {
         font-weight: bold;
+        background-color: #eaeaea;
     }
 
     .result-table td.subject {
         text-align: left;
         font-weight: bold;
+        padding-left: 8px;
+    }
+
+    /* Highlight low scores (less than 45) */
+    .result-table td {
+        transition: all 0.3s ease;
+    }
+
+    .result-table td.low-score {
+        background-color: #f8d7da;
+        color: #721c24;
+        font-weight: bold;
     }
 
     .grades {
-        margin-top: 10px;
+        margin-top: 15px;
         font-size: 12px;
+        border-top: 1px solid #000;
+        padding-top: 6px;
+        line-height: 1.4;
     }
 
     .behavior-table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 10px;
+        margin-top: 12px;
         font-size: 12px;
     }
 
     .behavior-table td {
-        padding: 3px;
+        padding: 6px;
+        border: 1px solid #000;
+        text-align: center;
     }
 
     .comments {
         margin-top: 15px;
         font-size: 13px;
+        border-top: 1px solid #000;
+        padding-top: 10px;
+        line-height: 1.5;
+    }
+
+    .comments p {
+        margin: 3px 0;
     }
 
     .signature {
@@ -122,12 +154,19 @@
     @media print {
         body {
             margin: 0;
+            background-color: #fff;
         }
         .container {
             border: none;
+            box-shadow: none;
+        }
+        .result-table td.low-score {
+            background-color: #fdd;
+            -webkit-print-color-adjust: exact;
         }
     }
 </style>
+
 </head>
 <body>
 
@@ -136,6 +175,7 @@
     $total_mark = 0;
     $totalObtainable = 0;
 
+   
     foreach ($mark_sheet as $data) {
 
         if ($data->subject_id == $optional_subject) {
@@ -232,8 +272,8 @@ if ($studentScore) {
         <tr>
             <td class="label">POSITION IN CLASS</td>
             <td class="value"><?php echo e($position); ?> OUT OF <?php echo e($totalStudentsInClass); ?></td>
-            <td class="label">POSITION IN SUBCLASS</td>
-            <td class="value">33RD OUT OF 48</td>
+           
+            
         </tr>
     </table>
 
@@ -259,10 +299,10 @@ if ($studentScore) {
              <?php $__currentLoopData = $mark_sheet; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
              <?php
     $subjectPosition = $studentSubjectPositions->get($data->subject_id);
+     $totalScore = $data->total_marks;
+                 $lowScoreClass = $totalScore < 45;
 ?>
-               <?php
-                                                            $skills = [];
-?>
+
                                                            
                                  <?php
                         $temp_grade[]=$data->total_gpa_grade;
@@ -301,7 +341,7 @@ if ($studentScore) {
             $skills['Handling Tools'] = $data['Handling Tools'];
         }
                                                                 ?>
-                                                                            <tr>
+                                                                            <tr class="<?php echo e($lowScoreClass ? 'low-score' : ''); ?>">
                 <td class="subject"><?php echo e($data->subject->subject_name); ?></td>
                  <?php
                                                                      $ca = collect($caScores)->firstWhere('subject_id', $data->subject_id);
@@ -437,10 +477,14 @@ if ($studentScore) {
 
        
         <tr>
-             <?php $__currentLoopData = $skills; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $skillName => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    
-                    <td><strong><?php echo e($skillName); ?></strong><?php echo e($value); ?></td>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+             
+            <td><strong>Honesty</strong><?php echo e($affectiveSkills->Honesty); ?></td>
+            <td><strong>Neatness</strong><?php echo e($affectiveSkills->Neatness); ?></td>
+            <td><strong>Punctuality</strong><?php echo e($affectiveSkills->Punctuality); ?></td>
+            <td><strong>Cooperation</strong><?php echo e($affectiveSkills->Cooperation); ?></td>
+            <td><strong>Attentiveness</strong><?php echo e($affectiveSkills->Attentiveness); ?></td>
+            <td><strong>Handwriting</strong><?php echo e($affectiveSkills->Handwriting); ?></td>
+            <td><strong>Sports</strong><?php echo e($affectiveSkills->Sports); ?></td>
             
         </tr>
        

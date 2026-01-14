@@ -40,6 +40,8 @@ use Modules\University\Repositories\Interfaces\UnCommonRepositoryInterface;
 class SmExamMarkRegisterController extends Controller
 {
         // Mark Register View Page
+
+        
         public function index()
         {
             try {
@@ -60,6 +62,41 @@ class SmExamMarkRegisterController extends Controller
                 return redirect()->back();
             }
         }
+
+        public function storeAffective(Request $request)
+    {
+
+        $request->validate([
+            'results.*.*' => 'nullable|numeric|min:0|max:10',
+        ]);
+
+        foreach ($request->results as $studentRecordId => $data) {
+
+            SmResultStore::updateOrCreate(
+                [
+                    'student_record_id' => $studentRecordId,
+                    'exam_type_id' => request('exam_type_id'),
+                    'class_id' => request('class_id'),
+                    'section_id' => request('section_id'),
+                ],
+                [
+                    'Honesty'        => $data['Honesty'] ?? null,
+                    'Politeness'     => $data['Politeness'] ?? null,
+                    'Neatness'       => $data['Neatness'] ?? null,
+                    'Punctuality'    => $data['Punctuality'] ?? null,
+                    
+                    'Cooperation'    => $data['Cooperation'] ?? null,
+                    'Attentiveness'  => $data['Attentiveness'] ?? null,
+                    'Handwriting'    => $data['Handwriting'] ?? null,
+                    'Sports'         => $data['Sports'] ?? null,
+                    'Attendance'     => $data['Attendance'] ?? null,
+                    
+                ]
+            );
+        }
+
+        return back()->with('success', 'Affective skills saved successfully.');
+    }
     
         public function create()
         {

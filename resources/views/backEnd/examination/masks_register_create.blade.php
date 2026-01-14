@@ -19,7 +19,7 @@
                     <a href="{{ route('dashboard') }}">@lang('common.dashboard')</a>
                     <a href="#">@lang('exam.examination')</a>
                     <a href="{{ route('marks_register') }}">@lang('exam.marks_register')</a>
-                    {{-- <a href="#">Helloo</a> --}}
+                    <a href="#">@lang('exam.add_marks')</a>
                 </div>
             </div>
         </div>
@@ -198,6 +198,9 @@
                         <input type="hidden" name="un_semester_label_id" value="{{ @$un_semester_label->id }}">
                         <input type="hidden" name="un_section_id" value="{{ @$un_section->id }}">
 
+
+                       
+                        
                         <div class="row">
                             <div class="col-lg-12">
                                 <table class="table school-table-style" cellspacing="0" width="100%">
@@ -208,7 +211,6 @@
                                             <th rowspan="2">@lang('common.student')</th>
                                             <th class="text-center" colspan="{{ $number_of_exam_parts + 1 }}">
                                                 {{ $subjectName->subject_name }}</th>
-                                            
                                             <th rowspan="2">@lang('exam.is_present')</th>
                                         </tr>
                                         <tr>
@@ -216,7 +218,6 @@
                                                 <th>{{ $part->exam_title }} ( {{ $part->exam_mark }} ) </th>
                                             @endforeach
                                             <th>@lang('common.teacher') @lang('reports.remarks')</th>
-                                           
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -330,6 +331,62 @@
                     </div>
                 @else
                     <div class="container-fluid p-0">
+                        <form action="{{ route('result.affective.store') }}" method="POST">
+                            @csrf
+                        
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Admission No</th>
+                                        <th>Student</th>
+                                        <th>Honesty</th>
+                                        <th>Politeness</th>
+                                        <th>Neatness</th>
+                                        <th>Punctuality</th>
+                                        
+                                        <th>Cooperation</th>
+                                        <th>Attentiveness</th>
+                                        <th>Handwriting</th>
+                                        <th>Sports</th>
+                                        <th>Attendance</th>
+                                       
+                                    </tr>
+                                </thead>
+                        
+                                <tbody>
+                                    @foreach ($students as $student)
+                                        <tr>
+                                            <td>{{ $student->studentDetail->admission_no }}</td>
+                                            <td>{{ $student->studentDetail->full_name }}</td>
+                        
+                                            @php $rid = $student->id; @endphp
+                        
+                                            <td><input type="number" min="1" max="10" name="results[{{ $rid }}][Honesty]" class="form-control"></td>
+                                            <td><input type="number" min="1" max="10" name="results[{{ $rid }}][Politeness]" class="form-control"></td>
+                                            <td><input type="number" min="1" max="10" name="results[{{ $rid }}][Neatness]" class="form-control"></td>
+                                            <td><input type="number" min="1" max="10" name="results[{{ $rid }}][Punctuality]" class="form-control"></td>
+                                            {{-- <td><input type="number" min="1" max="10" name="results[{{ $rid }}][Leadership]" class="form-control"></td> --}}
+                                            <td><input type="number" min="1" max="10" name="results[{{ $rid }}][Cooperation]" class="form-control"></td>
+                                            <td><input type="number" min="1" max="10" name="results[{{ $rid }}][Attentiveness]" class="form-control"></td>
+                                            <td><input type="number" min="1" max="10" name="results[{{ $rid }}][Handwriting]" class="form-control"></td>
+                                            <td><input type="number" min="1" max="10" name="results[{{ $rid }}][Sports]" class="form-control"></td>
+                        
+                                            <td>
+                                                <input type="number" min="0" name="results[{{ $rid }}][Attendance]" class="form-control">
+                                            </td>
+                        
+                                            {{-- <td>
+                                                <input type="text" name="results[{{ $rid }}][remarks]" class="form-control">
+                                            </td> --}}
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        
+                            <button class="btn btn-primary">Save Affective Skills</button>
+                        </form>
+                        
+                        
                         <div class="white-box mt-40">
                         <div class="row">
                             <div class="col-lg-6 col-md-6">
@@ -342,6 +399,7 @@
                                 </div>
                             </div>
                         </div>
+                       
 
                         {{ Form::open(['class' => 'form-horizontal', 'route' => 'marks_register_store', 'method' => 'POST', 'id' => 'marks_register_store']) }}
                         <input type="hidden" name="exam_id" value="{{ $exam_id }}">
@@ -362,26 +420,13 @@
                                                 <th rowspan="2">@lang('common.student')</th>
                                                 <th class="text-center" colspan="{{ $number_of_exam_parts + 1 }}">
                                                     {{ $subjectNames->subject_name }}</th>
-                                                {{-- <th rowspan="2">@lang('exam.is_present')</th> --}}
+                                                <th rowspan="2">@lang('exam.is_present')</th>
                                             </tr>
                                             <tr>
                                                 @foreach ($marks_entry_form as $part)
                                                     <th>{{ $part->exam_title }} ( {{ $part->exam_mark }} ) </th>
                                                 @endforeach
-                                                
-           
-                                                <th>Punctuality</th>
-                                                <th>Honesty</th>
-                                                <th>Leadership Skill</th>
-                                                <th>Cooperation</th>
-                                                <th>Attentiveness</th>
-                                                <th>Handwriting</th>
-                                                <th>Verbal Fluency</th>
-                                                <th>Sports</th>
-                                                <th>Handling Tools</th>
-                                                 
                                                 <th>@lang('common.teacher') @lang('reports.remarks')</th>
-                                                
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -450,97 +495,19 @@
                                                             </div>
                                                         </td>
                                                     @endforeach
-
-            
-                                                    <td>
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[{{ $record->id }}][Punctuality]"
-                                                                value=""
-                                                                >
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[{{ $record->id }}][Punctuality]"
-                                                                value=""
-                                                                >
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[{{ $record->id }}][Honesty]"
-                                                                value=""
-                                                                >
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[{{ $record->id }}][leadership_skills]"
-                                                                value=""
-                                                                >
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[{{ $record->id }}][Cooperation]"
-                                                                value=""
-                                                                >
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[{{ $record->id }}][Attentiveness]"
-                                                                value=""
-                                                                >
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[{{ $record->id }}][Handwriting]"
-                                                                value=""
-                                                                >
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[{{ $record->id }}][verbal_fluency]"
-                                                                value=""
-                                                                >
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[{{ $record->id }}][Sports]"
-                                                                value=""
-                                                                >
-                                                        </div>
-                                                    </td>
-                                                     <td>
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[{{ $record->id }}][handling_tools]"
-                                                                value=""
-                                                                >
-                                                        </div>
-                                                    </td>
-                                                    
                                                     <?php
                                                     $teacher_remarks = App\SmMarkStore::teacher_remarks($record->student_id, $exam_type->id, $record->class_id, $record->section_id, $subject_id, $record->id);
                                                     ?>
-                                                     
-                                                   
+                                                    <td>
+                                                        <div class="primary_input">
+                                                            <input class="primary_input_field" type="text"
+                                                                name="markStore[{{ $record->id }}][teacher_remarks]"
+                                                                value="{{ $teacher_remarks }}"
+                                                                {{ @($absent_check->attendance_type == 'A' || @$absent_check->attendance_type == '') && !isSkip('exam_attendance') ? 'readonly' : '' }}>
+                                                        </div>
+                                                    </td>
                                                     <?php $is_absent_check = App\SmMarkStore::is_absent_check($record->student_id, $part->exam_term_id, $part->class_id, $part->section_id, $part->subject_id, $record->id); ?>
-                                                    {{-- <td>
+                                                    <td>
                                                         <div class="primary_input">
                                                             @if (@$absent_check->attendance_type == 'P')
                                                                 <button class="primary-btn small fix-gr-bg"
@@ -550,14 +517,6 @@
                                                                     class="primary-btn small bg-danger text-white border-0"
                                                                     type="button">@lang('exam.absent')</button>
                                                             @endif
-                                                        </div>
-                                                    </td> --}}
-                                                     <td>
-                                                        <div class="primary_input">
-                                                            <input class="primary_input_field" type="text"
-                                                                name="markStore[{{ $record->id }}][teacher_remarks]"
-                                                                value="{{ $teacher_remarks }}"
-                                                                {{ @($absent_check->attendance_type == 'A' || @$absent_check->attendance_type == '') && !isSkip('exam_attendance') ? 'readonly' : '' }}>
                                                         </div>
                                                     </td>
                                                 </tr>

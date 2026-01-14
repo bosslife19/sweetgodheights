@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Examination\SmExamMarkRegisterController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\TeacherEvaluationController;
@@ -793,7 +794,10 @@ Route::group(['middleware' => ['XSS', 'subscriptionAccessUrl']], function  (){
         // marks register
         Route::get('marks-register', ['as' => 'marks_register', 'uses' => 'Admin\Examination\SmExamMarkRegisterController@index']);
         Route::post('marks-register', ['as' => 'marks_register_search', 'uses' => 'Admin\Examination\SmExamMarkRegisterController@reportSearch']);
-
+        Route::post(
+            '/result/affective/store',
+            [SmExamMarkRegisterController::class, 'storeAffective']
+        )->name('result.affective.store');
         Route::get('marks-register-create', ['as' => 'marks_register_create', 'uses' => 'Admin\Examination\SmExamMarkRegisterController@create']);
 
         Route::post('add-exam-routine-store', 'Admin\Examination\SmExamRoutineController@addExamRoutineStore')->name('add-exam-routine-store');
