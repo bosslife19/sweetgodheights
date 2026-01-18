@@ -487,6 +487,7 @@ class SmExamMarkRegisterController extends Controller
             }else{
                 $abc = [];
                 $class_id = $request->class_id;
+               
                 if ($request->section_id !='') {
                     $section_id = $request->section_id;
                 }
@@ -500,7 +501,7 @@ class SmExamMarkRegisterController extends Controller
                 ->where('class_id', $request->class_id)
                 ->first();
                 $exam_id = $exam->exam_type_id;
-                
+              
 
                 $counter = 0;           // Initilize by 0
                 // dd($request->markStore);
@@ -510,10 +511,13 @@ class SmExamMarkRegisterController extends Controller
     ->unique()
     ->filter()
     ->toArray();
+    
 
 $examSetups = DB::table('sm_exam_setups')
     ->whereIn('id', $examSetupIds)
     ->pluck('exam_title', 'id'); // [id => title]
+
+
 
   
     
@@ -522,6 +526,7 @@ $examSetups = DB::table('sm_exam_setups')
                     $marks          =   gv($record, 'marks', []);
                     $absent_students= array(gv($record, 'absent_students'));
 
+                   
               
                 
                     if ($request->section_id=='') {
@@ -531,7 +536,7 @@ $examSetups = DB::table('sm_exam_setups')
                     $roll_no        = gv($record, 'roll_no');
                     $ca_scores = []; // initialize before the foreach loop for mark
                     if (!empty($marks)) {
-                       
+                     
                         $exam_setup_count = 0;
                         $total_marks_persubject = 0;
                         foreach ($marks as $part_mark) {
@@ -556,6 +561,7 @@ $aggregate = SmMarkStore::where('subject_id', $request->subject_id)
     ->pluck('ca_scores')
     
     ->toArray();
+    
 $totalCA = 0;
 
 
@@ -591,7 +597,7 @@ $ca_scores['cummulative'] = $totalCA;
                                 // Is previous record exist ?
           
                             if ($previous_record == "" || $previous_record == null) {
-        
+          
                                 $marks_register = new SmMarkStore();
                                 $marks_register->exam_term_id           =       $exam_id;
                                 $marks_register->class_id               =       $class_id;
@@ -619,7 +625,9 @@ $ca_scores['cummulative'] = $totalCA;
         
                                     $marks_register->save();
                                     $marks_register->toArray();
+                                    
                             } else {
+                               
 
                                     //If already exists, it will updated
                                     $pid = $previous_record->id;
@@ -656,6 +664,7 @@ $ca_scores['cummulative'] = $totalCA;
     ->pluck('ca_scores')
     
     ->toArray();
+   
 $totalCA = 0;
 
 
@@ -699,6 +708,9 @@ $ca_scores['cummulative'] = $totalCA;
                                 ['student_record_id', $record_id],
                                 ['student_id', $sid]
                             ])->first();
+
+
+
         
                         if ($previous_result_record == "" || $previous_result_record == null) {
                             //If not result exists, it will create
@@ -709,27 +721,10 @@ $ca_scores['cummulative'] = $totalCA;
                                 $result_record->exam_type_id           =   $exam_id;
                                 $result_record->student_id             =   $sid;
                                 $result_record->student_record_id      =   $record_id;
-                                $result_record->Punctuality = $record['Punctuality'];
-                           
-                                
-
-                            
-                                  
-                                $result_record->Honesty = $record['Honesty'];
                                
-                                $result_record['Leadership Skill'] = $record['leadership_skills'];
-                                
-                                $result_record['Cooperation'] = $record['Cooperation'];
-                                $result_record['Attentiveness'] = $record['Attentiveness'];
-                                $result_record->Handwriting = $record['Handwriting'];
-                                $result_record['Verbal Fluency'] = $record['verbal_fluency'];
-                                $result_record->Sports = $record['Sports'];
-                                $result_record['Handling Tools'] = $record['handling_tools'];
+                               
 
-                            
-
-
-
+                               
         
                             if (isset($absent_students)) {
                                 if (in_array($record_id, $absent_students)) {
@@ -759,22 +754,7 @@ $ca_scores['cummulative'] = $totalCA;
                                 $result_record->total_gpa_point        =   @$mark_grade->gpa;
                                 $result_record->total_gpa_grade        =   @$mark_grade->grade_name;
                                
-                                 $result_record->Punctuality = $record['Punctuality'];
-                           
                                 
-
-                            
-                                  
-                                $result_record->Honesty = $record['Honesty'];
-                               
-                                $result_record['Leadership Skill'] = $record['leadership_skills'];
-                                
-                                $result_record['Cooperation'] = $record['Cooperation'];
-                                $result_record['Attentiveness'] = $record['Attentiveness'];
-                                $result_record->Handwriting = $record['Handwriting'];
-                                $result_record['Verbal Fluency'] = $record['verbal_fluency'];
-                                $result_record->Sports = $record['Sports'];
-                                $result_record['Handling Tools'] = $record['handling_tools'];
                                 $result_record->created_at = YearCheck::getYear() . '-' . date('m-d h:i:s');
                             if (isset($absent_students)) {
                                 if (in_array($record_id, $absent_students)) {

@@ -2248,6 +2248,8 @@ class SmStudentPanelController extends Controller
                     ->where('school_id', Auth::user()->school_id)
                     ->first();
 
+                   
+
                 if ($exam_content) {
                     $total_class_day = SmStudentAttendance::whereBetween('attendance_date', [$exam_content->start_date, $exam_content->end_date])
                                 ->where('class_id', $class_id)
@@ -2270,33 +2272,47 @@ class SmStudentPanelController extends Controller
                         ->count();
                 }
                 // Attendance Part End
-    $cumulate = SmMarkStore::where([
-    ['class_id', $class_id],
-    ['section_id', $section_id],
-])
-->where('school_id', Auth::user()->school_id)
-->whereNotNull('ca_scores')
-->get()
-->groupBy(function ($record) {
-    return $record->student_id . '-' . $record->subject_id; // group by student and subject
-})
-->map(function ($records, $key) {
-    [$student_id, $subject_id] = explode('-', $key);
+    $student_detail =  StudentRecord::where('student_id', $student_id)
+                    ->where('academic_id', getAcademicId())
+                    ->where('is_promote', 0)
+                    ->where('school_id', Auth::user()->school_id)
+                    ->first();
 
-    $total = $records->sum(function ($record) {
-        $scores = $record->ca_scores;
-        unset($scores['subject_id']);
+$recordss = SmMarkStore::where('student_id', $student_detail->id)
+    ->where('class_id', $class_id)
+    ->where('section_id', $section_id)
+    ->whereIn('exam_term_id', [1, 2, 3])
+    ->whereNotNull('ca_scores')
+    ->get();
 
-        return collect($scores)->map(fn($v) => (int) $v)->sum();
+$thirdTermReport = $recordss
+    ->groupBy(['subject_id', 'exam_term_id'])
+    ->map(function ($terms) {
+        return $terms->map(function ($recordss) {
+            $record = $recordss->first();
+            $scores = collect($record->ca_scores);
+
+            $ca1  = (int) $scores->get('1st CA', 0);
+            $ca2  = (int) $scores->get('2nd CA', 0);
+            $ca3  = (int) $scores->get('3rd CA', 0);
+            $exam = (int) $scores->get('Exam', 0);
+
+            return [
+                'ca1'   => $ca1,
+                'ca2'   => $ca2,
+                'ca3'   => $ca3,
+                'exam'  => $exam,
+                'total' => $ca1 + $ca2 + $ca3 + $exam,
+            ];
+        });
     });
 
-    return [
-        'student_id' => (int) $student_id,
-        'subject_id' => (int) $subject_id,
-        'total_marks' => $total,
-    ];
-})
-->values();
+
+
+
+
+
+   
 
 
 
@@ -2406,6 +2422,8 @@ $positionedScores = $positionedScores->map(function ($item, $index) use ($positi
                     ->whereIn('subject_id', $examSubjectIds)
                     ->where('academic_id', getAcademicId())
                     ->where('school_id', Auth::user()->school_id);
+
+                  
                 $subjects = $examSubjects;
                 $totalObtainable = 0;
 
@@ -2670,7 +2688,7 @@ foreach ($allsubs as $subject) {
     'exam_detail' => $exam_detail,
     'grades' => $grades,
     'exam_id' => $exam_id,
-    'cumulate'=>$cumulate,
+    
     'class_id' => $class_id,
     'student_detail' => $student_detail,
     'input'=>["class_id"=>$class_id, 'exam_id'=>$exam_id,'section_id'=>$section_id, 'student_id'=>$student_id],
@@ -2686,7 +2704,8 @@ foreach ($allsubs as $subject) {
     'student_attendance' => $student_attendance,
     'optional_subject_setup' => $optional_subject_setup,
     'totalObtainable' => $totalObtainable,
-    'affectiveSkills' =>$affectiveSkills
+    'affectiveSkills' =>$affectiveSkills,
+    'thirdTermReport'=>$thirdTermReport
             ];
 
             

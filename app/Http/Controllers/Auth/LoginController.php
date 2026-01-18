@@ -337,15 +337,37 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $login = trim($request->login);
 
-        $users = User::where('email', $request->email)->get(['id','email','password','role_id','school_id']);
+        // $user = User::where('school_id', app('school')->id)
+        //     ->where(function ($query) use ($login) {
+        //         $query->where('email', $login)
+        //               ->orWhereRaw('LOWER(full_name) = ?', [strtolower($login)]);
+        //     })
+        //     ->first();
+        $school = app('school');
+        $credentials = $request->only('email', 'password');
+        $login = strtolower($request->email);
+
+        $users = User::where('school_id', $school->id)
+            ->where(function ($query) use ($login) {
+                $query->where('email', $login)
+                      ->orWhereRaw('LOWER(full_name) = ?', [$login]);
+            })
+            ->get(['id','email','password','role_id','school_id']);
+
+            
+
+        // $users = User::where('email', $request->email)->get(['id','email','password','role_id','school_id']);
 
         #Single User
         if (count($users) > 0 && count($users) == 1) {
             $user = $users->first();
+           
             $school = $user->school_id;
+           
             if ($user && $user->school_id && $user->school_id != 1) {
+               
                 if (!$user->school->active_status) {
                     $this->guard()->logout();
                     Toastr::error('Your Institution is not Approved, Please contact with administrator.', 'Failed');
@@ -374,19 +396,25 @@ class LoginController extends Controller
                     }
                 }
 
-                if (Auth::attempt($credentials)) {
-                    if (Auth::check() && Auth::user()->active_status == 0) {
-                        $this->guard()->logout();
-                        Toastr::error('You are not allowed, Please contact with administrator.', 'Failed');
-                        return redirect()->route('login');
-                    }
+               
 
-                    if (moduleStatusCheck('TwoFactorAuth') && SmGeneralSettings::where('school_id', $school)->first()->two_factor) {
-                        $this->twoFactorAuth(auth()->user());
-                    }
-                }
+    
+        if (Auth::attempt($credentials)) {
+            if (Auth::check() && Auth::user()->active_status == 0) {
+                $this->guard()->logout();
+                Toastr::error('You are not allowed, Please contact with administrator.', 'Failed');
+                return redirect()->route('login');
+            }
+
+            if (moduleStatusCheck('TwoFactorAuth') && SmGeneralSettings::where('school_id', $school)->first()->two_factor) {
+                $this->twoFactorAuth(auth()->user());
+            }
+        }
+    
+               
 
             } 
+            
         }
 
         #Multiple User
@@ -434,6 +462,7 @@ class LoginController extends Controller
                 return redirect()->route('login');
             }
         }
+       
         $school = app('school');
         $request->merge(['school_id' => $school->id]);
         $logged_in = false;
@@ -445,18 +474,21 @@ class LoginController extends Controller
             return redirect()->route('login');
         }
         if (config('app.app_sync') && $request->auto_login) {
-            $user = User::where('email', $request->email)->first();
+
+            $user = User::where('email', $request->email)->orWhereRaw('LOWER(full_name) = ?', [$request->email])->first();
             if ($user) {
                 $this->guard()->login($user);
                 $logged_in = Auth::check();
             }
         } else {
+            
             $this->validateLogin($request);
+           
             if ($this->hasTooManyLoginAttempts($request)) {
                 $this->fireLockoutEvent($request);
                 return $this->sendLockoutResponse($request);
             }
-
+            
             $user = User::where('username', $request->email)->where('school_id', $school->id)->first();
 
             if (!$user) {
@@ -465,11 +497,17 @@ class LoginController extends Controller
             if (!$user) {
                 $user = User::where('email', $request->email)->where('school_id', $school->id)->first();
             }
+            if(!$user){
+                $user = User::where('full_name', $request->email)->where('school_id', $school->id)->first();
+            }
 
             if ($user) {
+
                 if (Hash::check($request->password, $user->password)) {
                     $this->guard()->login($user);
                     $logged_in = Auth::check();
+                    
+                   
                 }
             } else {
                 $logged_in = $this->attemptLogin($request);
@@ -477,7 +515,7 @@ class LoginController extends Controller
         }
 
         if ($logged_in) {
-
+            
             if (!$school->active_status) {
                 $this->guard()->logout();
                 Toastr::error('Your Institution is not Approved, Please contact with administrator.', 'Failed');
@@ -708,7 +746,7 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        //
+        
     }
 
     /**

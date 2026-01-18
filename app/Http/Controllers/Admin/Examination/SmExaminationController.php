@@ -3265,6 +3265,7 @@ $positionedScores = $positionedScores->map(function ($item, $index) use ($positi
                     ->where('school_id', Auth::user()->school_id)
                     ->get();
 
+                    dd($exams);
                 $classes = SmClass::where('active_status', 1)
                     ->where('academic_id', getAcademicId())
                     ->where('school_id', Auth::user()->school_id)

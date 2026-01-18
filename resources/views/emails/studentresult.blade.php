@@ -276,8 +276,98 @@ if ($studentScore) {
             
         </tr>
     </table>
+    
 
+    @if ($exam_details->id == 3)
     <table class="result-table">
+   <thead>
+    <tr>
+        <th rowspan="2">SUBJECT</th>
+
+        <th colspan="5">FIRST TERM</th>
+        <th colspan="5">SECOND TERM</th>
+        <th colspan="5">THIRD TERM</th>
+
+        <th rowspan="2">GRADE</th>
+        <th rowspan="2">REMARK</th>
+    </tr>
+
+    <tr>
+        @for ($i = 0; $i < 3; $i++)
+            <th>1st CA</th>
+            <th>2nd CA</th>
+            <th>3rd CA</th>
+            <th>EXAM</th>
+            <th>TOTAL</th>
+        @endfor
+    </tr>
+</thead>
+
+<tbody>
+@foreach ($mark_sheet as $data)
+
+
+    @php
+        $subjectData = $thirdTermReport[$data->subject_id] ?? [];
+       
+    @endphp
+
+    <tr>
+        <td class="subject">{{ $data->subject->subject_name }}</td>
+
+        {{-- FIRST TERM --}}
+        @foreach ([1,2,3] as $term)
+            @php
+                $termData = $subjectData[$term] ?? null;
+            @endphp
+
+            <td>{{ $termData['ca1'] ?? '-' }}</td>
+            <td>{{ $termData['ca2'] ?? '-' }}</td>
+            <td>{{ $termData['ca3'] ?? '-' }}</td>
+            <td>{{ $termData['exam'] ?? '-' }}</td>
+            <td>{{ $termData['total'] ?? '-' }}</td>
+        @endforeach
+         @if (@$generalsettingsResultType != 'mark')
+                                                                        <td>
+                                                                            <p>
+                                                                                @php
+                                                                                    $result = markGpa(@subjectPercentageMark(@$data->total_marks , @subjectFullMark($exam_details->id, $data->subject->id, $class_id, $section_id)));
+                                                                                    $main_subject_total_gpa += $result->gpa;
+                                                                                @endphp
+                                                                                {{@$data->total_gpa_grade}}
+                                                                            </p>
+                                                                        </td>
+                                                                    @endif
+                                                                    <td>
+
+                                                                        <p>
+                                                                            @php 
+                                                                                if($data->total_marks >= 70){
+                                                                                    echo 'Excellent';
+                                                                                }else if($data->total_marks >= 60){
+                                                                                    echo 'Very Good';
+                                                                                }else if($data->total_marks >= 50){
+                                                                                    echo 'Good';
+                                                                                }else if($data->total_marks >= 45){
+                                                                                    echo 'Fair';    
+                                                                                }else if($data->total_marks >= 40){
+                                                                                    echo 'Pass';    
+                                                                                }else{
+                                                                                    echo 'Fail';    
+
+                                                                                }
+                                                                            @endphp
+                                                                        </p>
+                                                                    </td>
+    </tr>
+@endforeach
+</tbody>
+
+
+
+        
+    @else
+        <table class="result-table">
         <thead>
             <tr>
                 <th rowspan="2">SUBJECT</th>
@@ -348,7 +438,7 @@ if ($studentScore) {
     $normalizedCa = collect($ca)->keyBy(fn($value, $key) => strtolower($key));
 
     
-    $cumulative = collect($cumulate)->firstWhere('subject_id', $data->subject_id);
+   
     
 @endphp
 @if (!isset($ca['CA']))
@@ -451,6 +541,7 @@ if ($studentScore) {
            
         </tbody>
     </table>
+    @endif
 
     <div class="grades">
         <strong>GRADES:</strong>

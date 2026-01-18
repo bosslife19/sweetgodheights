@@ -276,8 +276,99 @@ if ($studentScore) {
             
         </tr>
     </table>
+    
 
+    <?php if($exam_details->id == 3): ?>
     <table class="result-table">
+   <thead>
+    <tr>
+        <th rowspan="2">SUBJECT</th>
+
+        <th colspan="5">FIRST TERM</th>
+        <th colspan="5">SECOND TERM</th>
+        <th colspan="5">THIRD TERM</th>
+
+        <th rowspan="2">GRADE</th>
+        <th rowspan="2">REMARK</th>
+    </tr>
+
+    <tr>
+        <?php for($i = 0; $i < 3; $i++): ?>
+            <th>1st CA</th>
+            <th>2nd CA</th>
+            <th>3rd CA</th>
+            <th>EXAM</th>
+            <th>TOTAL</th>
+        <?php endfor; ?>
+    </tr>
+</thead>
+
+<tbody>
+<?php $__currentLoopData = $mark_sheet; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+
+
+    <?php
+        $subjectData = $thirdTermReport[$data->subject_id] ?? [];
+       
+    ?>
+
+    <tr>
+        <td class="subject"><?php echo e($data->subject->subject_name); ?></td>
+
+        
+        <?php $__currentLoopData = [1,2,3]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $term): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <?php
+                $termData = $subjectData[$term] ?? null;
+            ?>
+
+            <td><?php echo e($termData['ca1'] ?? '-'); ?></td>
+            <td><?php echo e($termData['ca2'] ?? '-'); ?></td>
+            <td><?php echo e($termData['ca3'] ?? '-'); ?></td>
+            <td><?php echo e($termData['exam'] ?? '-'); ?></td>
+            <td><?php echo e($termData['total'] ?? '-'); ?></td>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+         <?php if(@$generalsettingsResultType != 'mark'): ?>
+                                                                        <td>
+                                                                            <p>
+                                                                                <?php
+                                                                                    $result = markGpa(@subjectPercentageMark(@$data->total_marks , @subjectFullMark($exam_details->id, $data->subject->id, $class_id, $section_id)));
+                                                                                    $main_subject_total_gpa += $result->gpa;
+                                                                                ?>
+                                                                                <?php echo e(@$data->total_gpa_grade); ?>
+
+                                                                            </p>
+                                                                        </td>
+                                                                    <?php endif; ?>
+                                                                    <td>
+
+                                                                        <p>
+                                                                            <?php 
+                                                                                if($data->total_marks >= 70){
+                                                                                    echo 'Excellent';
+                                                                                }else if($data->total_marks >= 60){
+                                                                                    echo 'Very Good';
+                                                                                }else if($data->total_marks >= 50){
+                                                                                    echo 'Good';
+                                                                                }else if($data->total_marks >= 45){
+                                                                                    echo 'Fair';    
+                                                                                }else if($data->total_marks >= 40){
+                                                                                    echo 'Pass';    
+                                                                                }else{
+                                                                                    echo 'Fail';    
+
+                                                                                }
+                                                                            ?>
+                                                                        </p>
+                                                                    </td>
+    </tr>
+<?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+</tbody>
+
+
+
+        
+    <?php else: ?>
+        <table class="result-table">
         <thead>
             <tr>
                 <th rowspan="2">SUBJECT</th>
@@ -348,7 +439,7 @@ if ($studentScore) {
     $normalizedCa = collect($ca)->keyBy(fn($value, $key) => strtolower($key));
 
     
-    $cumulative = collect($cumulate)->firstWhere('subject_id', $data->subject_id);
+   
     
 ?>
 <?php if(!isset($ca['CA'])): ?>
@@ -456,6 +547,7 @@ if ($studentScore) {
            
         </tbody>
     </table>
+    <?php endif; ?>
 
     <div class="grades">
         <strong>GRADES:</strong>
