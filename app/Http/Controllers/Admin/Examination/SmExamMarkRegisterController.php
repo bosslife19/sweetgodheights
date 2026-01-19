@@ -62,12 +62,22 @@ class SmExamMarkRegisterController extends Controller
                 return redirect()->back();
             }
         }
+        
+        public function storeAttendance(Request $request){
+           
+           $exam_detail = SmExamType::where('id', $request->exam_id)->first();
+           $exam_detail->attendance_times = $request->termsOpened;
+           $exam_detail->save();
+        //    Toastr::success('Operation successful', 'Success');
+           return back()->with('success', 'Exam attendance times updated successfully.');
+
+        }
 
         public function storeAffective(Request $request)
     {
 
         $request->validate([
-            'results.*.*' => 'nullable|numeric|min:0|max:10',
+            'results.*.*' => 'nullable|numeric|min:0|max:100',
         ]);
 
         foreach ($request->results as $studentRecordId => $data) {
@@ -75,7 +85,7 @@ class SmExamMarkRegisterController extends Controller
             SmResultStore::updateOrCreate(
                 [
                     'student_record_id' => $studentRecordId,
-                    'exam_type_id' => request('exam_type_id'),
+                    'exam_type_id' => request('exam_id'),
                     'class_id' => request('class_id'),
                     'section_id' => request('section_id'),
                 ],
@@ -94,6 +104,9 @@ class SmExamMarkRegisterController extends Controller
                 ]
             );
         }
+
+
+        
 
         return back()->with('success', 'Affective skills saved successfully.');
     }

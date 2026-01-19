@@ -2236,7 +2236,9 @@ class SmStudentPanelController extends Controller
         }
     }
  public function prepareMarkSheetData($exam_id, $class_id, $section_id, $student_id)
+
     {
+        
         try {
             $total_class_days = 0;
             $student_attendance = 0;
@@ -2494,14 +2496,16 @@ foreach ($subjects as $subject) {
                         ['class_id', $class_id],
                         ['section_id', $section_id],
                     ])->value('id');
+                   
 
+                    // dd($student_id);
                     $affectiveSkills = SmResultStore::where([
-                        ['student_record_id', $studentRecordId],
-                        ['exam_type_id', $exam_id],
+                        ['student_id', $student_id],
+                        ['exam_type_id', $exam_type_id],
                         ['class_id', $class_id],
                         ['section_id', $section_id],
                     ])->first(); // <-- IMPORTANT: use first()
-                    
+
 
                 $subjects = SmAssignSubject::where('class_id', $class_id)
                     ->where('section_id', $section_id)

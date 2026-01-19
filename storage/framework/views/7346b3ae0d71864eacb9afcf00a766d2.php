@@ -351,6 +351,10 @@
                     <div class="container-fluid p-0">
                         <form action="<?php echo e(route('result.affective.store')); ?>" method="POST">
                             <?php echo csrf_field(); ?>
+                                                    <input type="hidden" name="exam_id" value="<?php echo e($exam_id); ?>">
+                        <input type="hidden" name="class_id" value="<?php echo e($class_id); ?>">
+                        <input type="hidden" name="section_id" value="<?php echo e($section_id); ?>">
+                        <input type="hidden" name="subject_id" value="<?php echo e($subject_id); ?>">
                         
                             <table class="table">
                                 <thead>
@@ -401,7 +405,89 @@
                         
                             <button class="btn btn-primary">Save Affective Skills</button>
                         </form>
-                        
+                        <style>
+    .term-form-wrapper {
+        max-width: 420px;
+        margin: 40px auto;
+        padding: 25px;
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .term-form-wrapper h4 {
+        margin-bottom: 20px;
+        font-weight: 600;
+        text-align: center;
+        color: #333;
+    }
+
+    .term-form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+
+    .term-form-group label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #555;
+    }
+
+    .term-form-group input {
+        padding: 10px 12px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        transition: border-color 0.2s ease;
+    }
+
+    .term-form-group input:focus {
+        outline: none;
+        border-color: #0d6efd;
+    }
+
+    .term-form-actions {
+        display: flex;
+        justify-content: center;
+    }
+
+    .term-form-actions button {
+        padding: 10px 30px;
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: 6px;
+    }
+</style>
+
+<div class="term-form-wrapper">
+    <h4>Term Attendance Setup</h4>
+
+    <form action="<?php echo e(route('result.attendance.store')); ?>" method="POST">
+        <?php echo csrf_field(); ?>
+        <div class="term-form-group">
+            <label for="termsOpened">
+                Number of Times School Opened This Term
+            </label>
+             <input type="hidden" name="exam_id" value="<?php echo e($exam_id); ?>">
+            <input
+                type="number"
+                name="termsOpened"
+                id="termsOpened"
+                min="0"
+                required
+            >
+        </div>
+
+        <div class="term-form-actions">
+            <button type="submit" class="btn btn-primary">
+                Save
+            </button>
+        </div>
+    </form>
+</div>
+
                         
                         <div class="white-box mt-40">
                         <div class="row">

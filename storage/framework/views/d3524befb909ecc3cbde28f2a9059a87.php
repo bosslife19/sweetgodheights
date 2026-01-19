@@ -266,15 +266,18 @@ if ($studentScore) {
         <tr>
             <td class="label">AVERAGE</td>
             <td class="value"><?php echo e($average_mark); ?></td>
-            <td class="label">NEXT TERM BEGINS</td>
-            <td class="value">13th Jan, 2025</td>
+            <td class="label">POSITION</td>
+            <td class="value"><?php echo e($position??'-'); ?> OUT OF <?php echo e($totalStudentsInClass); ?></td>
         </tr>
-        <tr>
-            <td class="label">POSITION IN CLASS</td>
-            <td class="value"><?php echo e($position); ?> OUT OF <?php echo e($totalStudentsInClass); ?></td>
-           
+         <tr>
             
+
+            <td class="label">Times Present</td>
+            <td class="value"><?php echo e($affectiveSkills->Attendance); ?></td>
+            <td class="label">Times School Opened</td>
+            <td class="value"><?php echo e($exam_details->attendance_times); ?></td>
         </tr>
+
     </table>
     
 
@@ -396,11 +399,12 @@ if ($studentScore) {
 
                                                            
                                  <?php
+
                         $temp_grade[]=$data->total_gpa_grade;
                  if ($data->subject_id==$optional_subject) {
                  continue;
  }
-                                                                     // collect affective skills if available
+                                                                // collect affective skills if available
         if ($data->Honesty !== null) {
             $skills['Honesty'] = $data->Honesty;
         }
@@ -564,7 +568,8 @@ if ($studentScore) {
         F9 [0-34]
     </div>
 
-    <?php if(!empty($skills)): ?>
+
+    <?php if($affectiveSkills): ?>
          <table class="behavior-table">
 
        

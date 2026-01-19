@@ -798,6 +798,10 @@ Route::group(['middleware' => ['XSS', 'subscriptionAccessUrl']], function  (){
             '/result/affective/store',
             [SmExamMarkRegisterController::class, 'storeAffective']
         )->name('result.affective.store');
+        Route::post(
+            '/result/attendance',
+            [SmExamMarkRegisterController::class, 'storeAttendance']
+        )->name('result.attendance.store');
         Route::get('marks-register-create', ['as' => 'marks_register_create', 'uses' => 'Admin\Examination\SmExamMarkRegisterController@create']);
 
         Route::post('add-exam-routine-store', 'Admin\Examination\SmExamRoutineController@addExamRoutineStore')->name('add-exam-routine-store');
